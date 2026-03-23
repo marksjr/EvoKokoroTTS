@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evo KokoroTTS - Gerador de Voz</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2d3348;
+    --text: #e8eaf0;
+    --text-muted: #8890a4;
+    --accent: #6c8aff;
+    --accent-hover: #8aa2ff;
+    --accent-glow: rgba(108,138,255,.15);
+    --green: #4ade80;
+    --green-bg: rgba(74,222,128,.1);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,.1);
+    --orange: #fb923c;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Header */
+  .header {
+    width: 100%;
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .header h1 { font-size: 20px; font-weight: 700; }
+  .header h1 span { color: var(--accent); }
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .status-badge.online { background: var(--green-bg); color: var(--green); }
+  .status-badge.offline { background: var(--red-bg); color: var(--red); }
+  .status-badge.loading { background: rgba(251,146,60,.1); color: var(--orange); }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+  .device-info { font-size: 12px; color: var(--text-muted); margin-left: 12px; }
+
+  /* Main */
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 16px;
+  }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 14px 16px;
+    resize: vertical;
+    transition: border-color .2s;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  textarea::placeholder { color: var(--text-muted); }
+  .char-count { text-align: right; font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+  .char-count.warn { color: var(--orange); }
+  .char-count.over { color: var(--red); }
+
+  /* Controls row */
+  .controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .controls { grid-template-columns: 1fr; } }
+
+  label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+
+  select, input[type=range] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+  select option { background: var(--surface2); color: var(--text); }
+
+  /* Range slider */
+  .range-wrap { position: relative; }
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    border: none;
+    padding: 0;
+    margin-top: 14px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+  .range-value {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 8px;
+  }
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Voice cards */
+  .voice-options { display: flex; gap: 10px; flex-wrap: wrap; }
+  .voice-option {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+    background: var(--surface2);
+  }
+  .voice-option:hover { border-color: var(--accent); background: var(--accent-glow); }
+  .voice-option.selected { border-color: var(--accent); background: var(--accent-glow); }
+  .voice-option .name { font-weight: 700; font-size: 15px; }
+  .voice-option .gender { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Buttons */
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    flex: 1;
+    min-width: 160px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover:not(:disabled) { background: var(--border); }
+  .btn-stream { background: #4ade80; color: #0f1117; }
+  .btn-stream:hover:not(:disabled) { background: #6ee7a0; transform: translateY(-1px); }
+
+  /* Format toggle */
+  .format-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .format-btn {
+    padding: 10px 20px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .format-btn.active { background: var(--accent); color: #fff; }
+  .format-btn:hover:not(.active) { background: var(--border); color: var(--text); }
+
+  /* Progress */
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    display: none;
+  }
+  .progress-bar.active { display: block; }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    animation: progress-indeterminate 1.5s infinite;
+    width: 30%;
+  }
+  @keyframes progress-indeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+
+  /* Audio player */
+  .player-section { display: none; }
+  .player-section.visible { display: block; }
+  .audio-player {
+    width: 100%;
+    margin-top: 8px;
+    border-radius: 8px;
+    outline: none;
+  }
+  audio { width: 100%; }
+  .download-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .download-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .download-link:hover { text-decoration: underline; }
+
+  /* Log / status messages */
+  .status-msg {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+  }
+  .status-msg.visible { display: block; }
+  .status-msg.error { background: var(--red-bg); color: var(--red); }
+  .status-msg.success { background: var(--green-bg); color: var(--green); }
+  .status-msg.info { background: var(--accent-glow); color: var(--accent); }
+
+  /* Footer */
+  .footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    width: 100%;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1><span>Evo</span> KokoroTTS</h1>
+  <div style="display:flex;align-items:center;">
+    <div id="statusBadge" class="status-badge loading">
+      <div class="status-dot"></div>
+      <span id="statusText">Conectando...</span>
+    </div>
+    <span id="deviceInfo" class="device-info"></span>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="container">
+
+  <!-- Status message -->
+  <div id="statusMsg" class="status-msg"></div>
+
+  <!-- Text input -->
+  <div class="card">
+    <div class="card-title">Texto</div>
+    <textarea id="textInput" placeholder="Digite ou cole seu texto em portugues aqui...&#10;&#10;Exemplo: Ola! Meu nome e Dora e estou testando o sistema de sintese de voz Kokoro." maxlength="10000"></textarea>
+    <div id="charCount" class="char-count">0 / 10.000</div>
+  </div>
+
+  <!-- Voice selection -->
+  <div class="card">
+    <div class="card-title">Voz</div>
+    <div class="voice-options" id="voiceOptions">
+      <div class="voice-option selected" data-voice="pf_dora" onclick="selectVoice(this)">
+        <div class="name">Dora</div>
+        <div class="gender">Feminina</div>
+      </div>
+      <div class="voice-option" data-voice="pm_alex" onclick="selectVoice(this)">
+        <div class="name">Alex</div>
+        <div class="gender">Masculina</div>
+      </div>
+      <div class="voice-option" data-voice="pm_santa" onclick="selectVoice(this)">
+        <div class="name">Santa</div>
+        <div class="gender">Masculina</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="card">
+    <div class="controls">
+      <!-- Speed -->
+      <div>
+        <label>Velocidade</label>
+        <div class="range-wrap">
+          <input type="range" id="speedRange" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSpeed()">
+          <div class="range-value" id="speedValue">1.0x</div>
+          <div class="range-labels"><span>Lenta</span><span>Normal</span><span>Rapida</span></div>
+        </div>
+      </div>
+
+      <!-- Format -->
+      <div>
+        <label>Formato</label>
+        <div class="format-toggle" style="margin-top:8px;">
+          <button class="format-btn active" data-format="mp3" onclick="selectFormat(this)">MP3 (320k)</button>
+          <button class="format-btn" data-format="wav" onclick="selectFormat(this)">WAV (PCM)</button>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div>
+        <label>Detalhes</label>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.8;">
+          <div>Sample Rate: <strong style="color:var(--text)">24 kHz</strong></div>
+          <div>Modelo: <strong style="color:var(--text)">Kokoro-82M</strong></div>
+          <div>Idioma: <strong style="color:var(--text)">pt-BR</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn btn-primary" id="btnGenerate" onclick="generate()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Gerar Audio
+    </button>
+    <button class="btn btn-stream" id="btnStream" onclick="generateStream()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+      Streaming
+    </button>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-fill"></div>
+  </div>
+
+  <!-- Player -->
+  <div class="player-section" id="playerSection">
+    <div class="card">
+      <div class="card-title">Resultado</div>
+      <audio id="audioPlayer" controls></audio>
+      <div class="download-info">
+        <span id="audioInfo"></span>
+        <a id="downloadLink" class="download-link" download>Baixar arquivo</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  Evo KokoroTTS &bull; Modelo Kokoro-82M &bull; pt-BR &bull;
+  <a href="/docs" target="_blank">API Docs</a> &bull;
+  <a href="/doc.html" target="_blank">Documentacao</a>
+</div>
+
+<script>
+const API = window.location.origin;
+let selectedVoice = 'pf_dora';
+let selectedFormat = 'mp3';
+let isGenerating = false;
+
+// --- Status check ---
+async function checkHealth() {
+  const badge = document.getElementById('statusBadge');
+  const text = document.getElementById('statusText');
+  const device = document.getElementById('deviceInfo');
+  try {
+    const r = await fetch(`${API}/health`);
+    const data = await r.json();
+    if (data.model_loaded) {
+      badge.className = 'status-badge online';
+      text.textContent = 'Online';
+      const gpu = data.device === 'cuda';
+      device.innerHTML = gpu
+        ? '<strong style="color:#4ade80">GPU (CUDA)</strong>'
+        : '<strong style="color:#fb923c">CPU</strong>';
+    } else {
+      badge.className = 'status-badge loading';
+      text.textContent = 'Carregando modelo...';
+      device.textContent = '';
+      setTimeout(checkHealth, 3000);
+    }
+  } catch {
+    badge.className = 'status-badge offline';
+    text.textContent = 'Offline';
+    device.textContent = '';
+    setTimeout(checkHealth, 5000);
+  }
+}
+
+// --- Voice selection ---
+function selectVoice(el) {
+  document.querySelectorAll('.voice-option').forEach(v => v.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedVoice = el.dataset.voice;
+}
+
+// --- Format ---
+function selectFormat(el) {
+  document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedFormat = el.dataset.format;
+}
+
+// --- Speed ---
+function updateSpeed() {
+  const v = document.getElementById('speedRange').value;
+  document.getElementById('speedValue').textContent = `${parseFloat(v).toFixed(1)}x`;
+}
+
+// --- Char count ---
+document.getElementById('textInput').addEventListener('input', function() {
+  const len = this.value.length;
+  const counter = document.getElementById('charCount');
+  counter.textContent = `${len.toLocaleString('pt-BR')} / 10.000`;
+  counter.className = 'char-count' + (len > 9500 ? ' over' : len > 8000 ? ' warn' : '');
+});
+
+// --- Status message ---
+function showMsg(type, msg) {
+  const el = document.getElementById('statusMsg');
+  el.className = `status-msg visible ${type}`;
+  el.textContent = msg;
+  if (type === 'success') setTimeout(() => el.classList.remove('visible'), 5000);
+}
+function hideMsg() {
+  document.getElementById('statusMsg').classList.remove('visible');
+}
+
+// --- Set loading state ---
+function setLoading(loading) {
+  isGenerating = loading;
+  document.getElementById('btnGenerate').disabled = loading;
+  document.getElementById('btnStream').disabled = loading;
+  document.getElementById('progressBar').className = loading ? 'progress-bar active' : 'progress-bar';
+}
+
+// --- Generate audio ---
+async function generate() {
+  const text = document.getElementById('textInput').value.trim();
+  if (!text) { showMsg('error', 'Digite algum texto para gerar o audio.'); return; }
+
+  setLoading(true);
+  hideMsg();
+  const start = Date.now();
+
+  try {
+    const speed = parseFloat(document.getElementById('speedRange').value);
+    const r = await fetch(`${API}/tts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ text, voice: selectedVoice, speed, format: selectedFormat }),
+    });
+
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ detail: r.statusText }));
+      throw new Error(err.detail || `Erro ${r.status}`);
+    }
+
+    const blob = await r.blob();
+    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+    const size = (blob.size / 1024).toFixed(0);
+    showAudio(blob, selectedFormat, `${size} KB | ${elapsed}s | ${selectedVoice} | ${speed}x`);
+    showMsg('success', `Audio gerado em ${elapsed}s (${size} KB)`);
+  } catch (e) {
+    showMsg('error', `Erro: ${e.message}`);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// --- Stream audio ---
+async function generateStream() {
+  const text = document.getElementById('textInput').value.trim();
+  if (!text) { showMsg('error', 'Digite algum texto para streaming.'); return; }
+
+  setLoading(true);
+  hideMsg();
+  const start = Date.now();
+
+  try {
+    const speed = parseFloat(document.getElementById('speedRange').value);
+    const r = await fetch(`${API}/tts/stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ text, voice: selectedVoice, speed }),
+    });
+
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ detail: r.statusText }));
+      throw new Error(err.detail || `Erro ${r.status}`);
+    }
+
+    const blob = await r.blob();
+    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+    const size = (blob.size / 1024).toFixed(0);
+    showAudio(blob, 'mp3', `${size} KB | ${elapsed}s | streaming | ${selectedVoice} | ${speed}x`);
+    showMsg('success', `Streaming concluido em ${elapsed}s (${size} KB)`);
+  } catch (e) {
+    showMsg('error', `Erro: ${e.message}`);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// --- Show audio player ---
+function showAudio(blob, format, info) {
+  const player = document.getElementById('audioPlayer');
+  const section = document.getElementById('playerSection');
+  const infoEl = document.getElementById('audioInfo');
+  const dlLink = document.getElementById('downloadLink');
+
+  const url = URL.createObjectURL(blob);
+  player.src = url;
+  player.play();
+
+  infoEl.textContent = info;
+  dlLink.href = url;
+  dlLink.download = `audio.${format}`;
+  section.classList.add('visible');
+  section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// --- Init ---
+checkHealth();
+</script>
+</body>
+</html>

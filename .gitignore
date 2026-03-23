@@ -1,0 +1,29 @@
+# Python
+venv/
+python_embedded/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ferramentas baixadas pelo instalador
+ffmpeg/
+espeak-ng/
+
+# Arquivos de audio gerados
+*.mp3
+*.wav
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Agent/Claude config
+.agent/
+.claude/
+
+# Imagens temporárias
+image.png

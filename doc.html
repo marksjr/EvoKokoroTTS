@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evo KokoroTTS - Documentacao</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d2a8ff;
+    --accent4: #f0883e;
+    --red: #f85149;
+    --get: #3fb950;
+    --post: #58a6ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .wrapper { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 280px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .sidebar-logo {
+    padding: 0 24px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .sidebar-logo h2 { font-size: 18px; color: var(--accent); }
+  .sidebar-logo p { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .sidebar nav { padding: 0 12px; }
+  .sidebar nav a {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: all .15s;
+  }
+  .sidebar nav a:hover { background: var(--surface2); color: var(--text); text-decoration: none; }
+  .sidebar nav .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    padding: 16px 12px 6px;
+  }
+  .main { margin-left: 280px; padding: 40px 60px; max-width: 960px; width: 100%; }
+
+  /* Sections */
+  section { margin-bottom: 56px; }
+  h1 { font-size: 32px; margin-bottom: 8px; }
+  h1 span { color: var(--accent); }
+  h2 { font-size: 22px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 17px; margin: 24px 0 12px; color: var(--accent3); }
+  p { margin-bottom: 12px; color: var(--text-muted); }
+
+  /* Method badges */
+  .method {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .method-get { background: rgba(63,185,80,.15); color: var(--get); }
+  .method-post { background: rgba(88,166,255,.15); color: var(--post); }
+
+  /* Endpoint cards */
+  .endpoint {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .endpoint-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .endpoint-header code {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .endpoint-header .desc {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .endpoint-body { padding: 20px; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  td {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    color: var(--text);
+  }
+  td code {
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--accent3);
+  }
+  .required { color: var(--red); font-weight: 600; font-size: 11px; }
+  .optional { color: var(--text-muted); font-size: 11px; }
+
+  /* Code blocks */
+  pre {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 12px 0;
+  }
+  pre code { background: none; padding: 0; color: var(--text); }
+  .comment { color: var(--text-muted); }
+  .string { color: var(--accent2); }
+  .key { color: var(--accent); }
+  .num { color: var(--accent4); }
+
+  /* Info boxes */
+  .info-box {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .info-box.tip { background: rgba(63,185,80,.08); border-left: 3px solid var(--accent2); }
+  .info-box.warn { background: rgba(240,136,62,.08); border-left: 3px solid var(--accent4); }
+  .info-box.note { background: rgba(88,166,255,.08); border-left: 3px solid var(--accent); }
+  .info-box .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Voice cards */
+  .voice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 16px 0; }
+  .voice-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color .2s;
+  }
+  .voice-card:hover { border-color: var(--accent); }
+  .voice-card .name { font-size: 18px; font-weight: 600; }
+  .voice-card .id { font-family: monospace; color: var(--accent3); font-size: 13px; margin: 4px 0; }
+  .voice-card .gender { font-size: 13px; color: var(--text-muted); }
+  .voice-card .badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-f { background: rgba(210,168,255,.15); color: var(--accent3); }
+  .badge-m { background: rgba(88,166,255,.15); color: var(--accent); }
+  .badge-default { background: rgba(63,185,80,.15); color: var(--accent2); margin-left: 6px; }
+
+  /* Specs grid */
+  .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 16px 0; }
+  .spec-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .spec-item .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+  .spec-item .value { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px; }
+  .spec-item .detail { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 0; }
+  .tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    background: var(--surface);
+    margin-right: -1px;
+  }
+  .tab.active { background: var(--surface2); color: var(--text); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .tab-container pre { border-radius: 0 8px 8px 8px; margin-top: 0; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 24px 20px; }
+    .specs-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Pipeline */
+  .pipeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 16px 0;
+  }
+  .pipeline-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    min-width: 120px;
+  }
+  .pipeline-step small { display: block; font-weight: 400; color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+  .pipeline-arrow { color: var(--accent); font-size: 20px; }
+
+  /* Status codes */
+  .status-ok { color: var(--accent2); }
+  .status-err { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h2>Evo KokoroTTS</h2>
+      <p>v1.0.0 &bull; pt-BR &bull; Kokoro-82M</p>
+    </div>
+    <nav>
+      <div class="section-title">Visao Geral</div>
+      <a href="#intro">Introducao</a>
+      <a href="#specs">Especificacoes Tecnicas</a>
+      <a href="#voices">Vozes Disponiveis</a>
+      <a href="#pipeline">Pipeline de Processamento</a>
+
+      <div class="section-title">Endpoints</div>
+      <a href="#ep-health">GET /health</a>
+      <a href="#ep-voices">GET /voices</a>
+      <a href="#ep-tts">POST /tts</a>
+      <a href="#ep-stream">POST /tts/stream</a>
+
+      <div class="section-title">Exemplos</div>
+      <a href="#ex-curl">cURL</a>
+      <a href="#ex-js">JavaScript / Fetch</a>
+      <a href="#ex-python">Python / Requests</a>
+      <a href="#ex-php">PHP / cURL</a>
+
+      <div class="section-title">Referencia</div>
+      <a href="#errors">Codigos de Erro</a>
+      <a href="#limits">Limites e Restricoes</a>
+      <a href="#deploy">Deploy e Configuracao</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Intro -->
+    <section id="intro">
+      <h1><span>Evo</span> KokoroTTS</h1>
+      <p style="font-size:16px;color:var(--text);">
+        API REST local de Text-to-Speech em portugues brasileiro usando o modelo <strong>Kokoro-82M</strong>.
+        Converta texto em audio de alta qualidade com multiplas vozes, controle de velocidade e streaming em tempo real.
+      </p>
+      <div class="info-box note">
+        <span class="icon">&#9432;</span>
+        <div>
+          <strong>Base URL:</strong> <code>http://localhost:8880</code><br>
+          A API tambem gera documentacao interativa automatica em
+          <a href="http://localhost:8880/docs" target="_blank">/docs</a> (Swagger UI) e
+          <a href="http://localhost:8880/redoc" target="_blank">/redoc</a> (ReDoc).
+        </div>
+      </div>
+    </section>
+
+    <!-- Specs -->
+    <section id="specs">
+      <h2>Especificacoes Tecnicas</h2>
+      <div class="specs-grid">
+        <div class="spec-item">
+          <div class="label">Sample Rate</div>
+          <div class="value">24 kHz</div>
+          <div class="detail">Nativo do Kokoro-82M</div>
+        </div>
+        <div class="spec-item">
+          <div class="label">MP3 Bitrate</div>
+          <div class="value">320 kbps</div>
+          <div class="detail">Endpoint /tts (completo)</div>
+        </div>
+        <div class="spec-item">
+          <div class="label">MP3 Stream</div>
+          <div class="value">256 kbps</div>
+          <div class="detail">Endpoint /tts/stream</div>
+        </div>
+        <div class="spec-item">
+          <div class="label">WAV</div>
+          <div class="value">16-bit PCM</div>
+          <div class="detail">Mono, 24kHz, sem compressao</div>
+        </div>
+        <div class="spec-item">
+          <div class="label">Modelo</div>
+          <div class="value">Kokoro-82M</div>
+          <div class="detail">82M parametros</div>
+        </div>
+        <div class="spec-item">
+          <div class="label">Device</div>
+          <div class="value">Auto</div>
+          <div class="detail">CUDA (GPU) ou CPU</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Voices -->
+    <section id="voices">
+      <h2>Vozes Disponiveis</h2>
+      <p>Todas as vozes sao otimizadas para portugues brasileiro (pt-BR).</p>
+      <div class="voice-grid">
+        <div class="voice-card">
+          <div class="name">Dora</div>
+          <div class="id">pf_dora</div>
+          <div class="gender">Feminino</div>
+          <span class="badge badge-f">Feminina</span>
+          <span class="badge badge-default">Padrao</span>
+        </div>
+        <div class="voice-card">
+          <div class="name">Alex</div>
+          <div class="id">pm_alex</div>
+          <div class="gender">Masculino</div>
+          <span class="badge badge-m">Masculina</span>
+        </div>
+        <div class="voice-card">
+          <div class="name">Santa</div>
+          <div class="id">pm_santa</div>
+          <div class="gender">Masculino</div>
+          <span class="badge badge-m">Masculina</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline -->
+    <section id="pipeline">
+      <h2>Pipeline de Processamento</h2>
+      <p>Fluxo completo desde o texto ate o audio final:</p>
+      <div class="pipeline">
+        <div class="pipeline-step">Texto Bruto<small>Input do usuario</small></div>
+        <span class="pipeline-arrow">&#10132;</span>
+        <div class="pipeline-step">Pre-processamento<small>Abreviacoes, numeros, %</small></div>
+        <span class="pipeline-arrow">&#10132;</span>
+        <div class="pipeline-step">Chunking<small>80-450 caracteres</small></div>
+        <span class="pipeline-arrow">&#10132;</span>
+        <div class="pipeline-step">Kokoro-82M<small>Sintese neural</small></div>
+        <span class="pipeline-arrow">&#10132;</span>
+        <div class="pipeline-step">Crossfade<small>50ms entre chunks</small></div>
+        <span class="pipeline-arrow">&#10132;</span>
+        <div class="pipeline-step">Normalizar<small>Pico em 0.95</small></div>
+        <span class="pipeline-arrow">&#10132;</span>
+        <div class="pipeline-step">Encode<small>MP3 320k / WAV</small></div>
+      </div>
+
+      <h3>Normalizacao Unicode (NFC)</h3>
+      <div class="info-box note">
+        <span class="icon">&#9432;</span>
+        <div>
+          A API normaliza automaticamente todos os textos para <strong>NFC</strong> (forma composta Unicode).
+          Isso garante que caracteres como <code>ã</code>, <code>ç</code>, <code>é</code>, <code>ô</code>, <code>ü</code>
+          sejam tratados corretamente, independentemente de como foram digitados ou copiados.
+          Aspas tipograficas, travessoes e reticencias Unicode tambem sao convertidos.
+        </div>
+      </div>
+
+      <h3>Caracteres especiais tratados</h3>
+      <table>
+        <tr><th>Entrada</th><th>Convertido para</th></tr>
+        <tr><td><code>&ldquo; &rdquo; &laquo; &raquo;</code> (aspas tipograficas)</td><td><code>"</code> (aspas simples)</td></tr>
+        <tr><td><code>&lsquo; &rsquo;</code> (aspas simples tipograficas)</td><td><code>'</code> (apostrofo)</td></tr>
+        <tr><td><code>&mdash; &ndash;</code> (travessao, meia-risca)</td><td><code>,</code> (pausa natural)</td></tr>
+        <tr><td><code>&hellip;</code> (reticencias Unicode)</td><td><code>...</code> (tres pontos)</td></tr>
+        <tr><td>Espacos especiais (no-break, thin, etc.)</td><td>Espaco normal</td></tr>
+        <tr><td><code>&amp;</code></td><td><code>e</code></td></tr>
+      </table>
+
+      <h3>Pre-processamento automatico (pt-BR)</h3>
+      <table>
+        <tr><th>Categoria</th><th>Entrada</th><th>Expandido para</th></tr>
+        <tr><td rowspan="4">Titulos</td><td><code>Dr.</code> / <code>Dra.</code></td><td>Doutor / Doutora</td></tr>
+        <tr><td><code>Sr.</code> / <code>Sra.</code> / <code>Srta.</code></td><td>Senhor / Senhora / Senhorita</td></tr>
+        <tr><td><code>Prof.</code> / <code>Profa.</code></td><td>Professor / Professora</td></tr>
+        <tr><td><code>Eng.</code> / <code>Adv.</code></td><td>Engenheiro / Advogado</td></tr>
+        <tr><td rowspan="3">Enderecos</td><td><code>Av.</code></td><td>Avenida</td></tr>
+        <tr><td><code>R.</code></td><td>Rua</td></tr>
+        <tr><td><code>n&ordm;</code> / <code>N&ordm;</code> / <code>n&deg;</code> / <code>N&deg;</code></td><td>numero</td></tr>
+        <tr><td rowspan="3">Empresas</td><td><code>Ltda.</code></td><td>Limitada</td></tr>
+        <tr><td><code>Cia.</code></td><td>Companhia</td></tr>
+        <tr><td><code>S.A.</code></td><td>Sociedade Anonima</td></tr>
+        <tr><td rowspan="2">Contato</td><td><code>tel.</code></td><td>telefone</td></tr>
+        <tr><td><code>cel.</code></td><td>celular</td></tr>
+        <tr><td rowspan="3">Moedas</td><td><code>R$ 50</code></td><td>50 reais</td></tr>
+        <tr><td><code>US$ 100</code></td><td>100 dolares</td></tr>
+        <tr><td><code>&euro; 200</code></td><td>200 euros</td></tr>
+        <tr><td>Porcentagem</td><td><code>30%</code></td><td>30 por cento</td></tr>
+        <tr><td>Ordinais</td><td><code>1&ordm;</code> a <code>10&ordm;</code> / <code>1&ordf;</code> a <code>10&ordf;</code></td><td>primeiro a decimo / primeira a decima</td></tr>
+        <tr><td rowspan="3">Diversos</td><td><code>etc.</code> / <code>pag.</code> / <code>pags.</code></td><td>etcetera / pagina / paginas</td></tr>
+        <tr><td><code>Art.</code> / <code>cap.</code> / <code>vol.</code></td><td>Artigo / capitulo / volume</td></tr>
+        <tr><td><code>aprox.</code> / <code>qtd.</code> / <code>qtde.</code></td><td>aproximadamente / quantidade</td></tr>
+      </table>
+
+      <div class="info-box tip">
+        <span class="icon">&#10003;</span>
+        <div>
+          <strong>Dica:</strong> Voce pode enviar texto com acentos, cedilhas e caracteres especiais normalmente.
+          A API trata tudo automaticamente: <code>"O cora&ccedil;&atilde;o da na&ccedil;&atilde;o &eacute; S&atilde;o Paulo"</code> funciona perfeitamente.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== ENDPOINTS =================== -->
+
+    <!-- GET /health -->
+    <section id="ep-health">
+      <h2>Endpoints</h2>
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method method-get">GET</span>
+          <code>/health</code>
+          <span class="desc">Verificar status da API</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Retorna o estado atual da API, device utilizado e se o modelo esta carregado.</p>
+          <h3>Resposta (200)</h3>
+<pre><code>{
+  <span class="key">"status"</span>: <span class="string">"ok"</span>,        <span class="comment">// "ok" ou "loading"</span>
+  <span class="key">"device"</span>: <span class="string">"cuda"</span>,      <span class="comment">// "cuda" ou "cpu"</span>
+  <span class="key">"model_loaded"</span>: <span class="num">true</span>    <span class="comment">// boolean</span>
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- GET /voices -->
+    <section id="ep-voices">
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method method-get">GET</span>
+          <code>/voices</code>
+          <span class="desc">Listar vozes disponiveis</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Retorna a lista completa de vozes disponiveis para sintese.</p>
+          <h3>Resposta (200)</h3>
+<pre><code>[
+  {
+    <span class="key">"id"</span>: <span class="string">"pf_dora"</span>,
+    <span class="key">"name"</span>: <span class="string">"Dora"</span>,
+    <span class="key">"gender"</span>: <span class="string">"feminino"</span>,
+    <span class="key">"lang"</span>: <span class="string">"pt-br"</span>,
+    <span class="key">"description"</span>: <span class="string">"Voz feminina brasileira - Dora"</span>
+  },
+  {
+    <span class="key">"id"</span>: <span class="string">"pm_alex"</span>,
+    <span class="key">"name"</span>: <span class="string">"Alex"</span>,
+    <span class="key">"gender"</span>: <span class="string">"masculino"</span>,
+    <span class="key">"lang"</span>: <span class="string">"pt-br"</span>,
+    <span class="key">"description"</span>: <span class="string">"Voz masculina brasileira - Alex"</span>
+  },
+  {
+    <span class="key">"id"</span>: <span class="string">"pm_santa"</span>,
+    <span class="key">"name"</span>: <span class="string">"Santa"</span>,
+    <span class="key">"gender"</span>: <span class="string">"masculino"</span>,
+    <span class="key">"lang"</span>: <span class="string">"pt-br"</span>,
+    <span class="key">"description"</span>: <span class="string">"Voz masculina brasileira - Santa"</span>
+  }
+]</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- POST /tts -->
+    <section id="ep-tts">
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method method-post">POST</span>
+          <code>/tts</code>
+          <span class="desc">Gerar audio completo</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Sintetiza o texto completo e retorna o arquivo de audio. Ideal para gerar arquivos de audio para download ou armazenamento.</p>
+
+          <h3>Request Body (JSON)</h3>
+          <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Obrigatorio</th><th>Padrao</th><th>Descricao</th></tr>
+            <tr>
+              <td><code>text</code></td>
+              <td><code>string</code></td>
+              <td><span class="required">SIM</span></td>
+              <td>-</td>
+              <td>Texto para sintetizar. De 1 a 10.000 caracteres.</td>
+            </tr>
+            <tr>
+              <td><code>voice</code></td>
+              <td><code>string</code></td>
+              <td><span class="optional">nao</span></td>
+              <td><code>"pf_dora"</code></td>
+              <td>ID da voz. Opcoes: <code>pf_dora</code>, <code>pm_alex</code>, <code>pm_santa</code></td>
+            </tr>
+            <tr>
+              <td><code>speed</code></td>
+              <td><code>float</code></td>
+              <td><span class="optional">nao</span></td>
+              <td><code>1.0</code></td>
+              <td>Velocidade da fala. Minimo <code>0.5</code> (lento), maximo <code>2.0</code> (rapido).</td>
+            </tr>
+            <tr>
+              <td><code>format</code></td>
+              <td><code>string</code></td>
+              <td><span class="optional">nao</span></td>
+              <td><code>"mp3"</code></td>
+              <td>Formato de saida: <code>"mp3"</code> (320kbps) ou <code>"wav"</code> (PCM 16-bit)</td>
+            </tr>
+          </table>
+
+          <h3>Payload minimo</h3>
+<pre><code>{
+  <span class="key">"text"</span>: <span class="string">"Ola, mundo!"</span>
+}</code></pre>
+
+          <h3>Payload completo</h3>
+<pre><code>{
+  <span class="key">"text"</span>: <span class="string">"Ola! Meu nome e Dora e estou testando a API de sintese de voz."</span>,
+  <span class="key">"voice"</span>: <span class="string">"pf_dora"</span>,
+  <span class="key">"speed"</span>: <span class="num">1.0</span>,
+  <span class="key">"format"</span>: <span class="string">"mp3"</span>
+}</code></pre>
+
+          <h3>Resposta (200)</h3>
+          <table>
+            <tr><th>Header</th><th>Valor</th></tr>
+            <tr><td><code>Content-Type</code></td><td><code>audio/mpeg</code> (mp3) ou <code>audio/wav</code> (wav)</td></tr>
+            <tr><td><code>Content-Disposition</code></td><td><code>attachment; filename="tts.mp3"</code></td></tr>
+          </table>
+          <p>O corpo da resposta contem os bytes binarios do arquivo de audio.</p>
+
+          <div class="info-box tip">
+            <span class="icon">&#10003;</span>
+            <div><strong>WAV vs MP3:</strong> Use <code>"wav"</code> quando precisar de qualidade maxima sem compressao (editar audio, processar depois). Use <code>"mp3"</code> para distribuicao, web e armazenamento eficiente.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POST /tts/stream -->
+    <section id="ep-stream">
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method method-post">POST</span>
+          <code>/tts/stream</code>
+          <span class="desc">Streaming de audio em tempo real</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Sintetiza o texto e envia o audio em chunks conforme cada trecho fica pronto. O cliente recebe o primeiro trecho de audio antes de toda a sintese estar concluida. Ideal para playback em tempo real.</p>
+
+          <h3>Request Body (JSON)</h3>
+          <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Obrigatorio</th><th>Padrao</th><th>Descricao</th></tr>
+            <tr>
+              <td><code>text</code></td>
+              <td><code>string</code></td>
+              <td><span class="required">SIM</span></td>
+              <td>-</td>
+              <td>Texto para sintetizar. De 1 a 10.000 caracteres.</td>
+            </tr>
+            <tr>
+              <td><code>voice</code></td>
+              <td><code>string</code></td>
+              <td><span class="optional">nao</span></td>
+              <td><code>"pf_dora"</code></td>
+              <td>ID da voz. Opcoes: <code>pf_dora</code>, <code>pm_alex</code>, <code>pm_santa</code></td>
+            </tr>
+            <tr>
+              <td><code>speed</code></td>
+              <td><code>float</code></td>
+              <td><span class="optional">nao</span></td>
+              <td><code>1.0</code></td>
+              <td>Velocidade da fala. Minimo <code>0.5</code>, maximo <code>2.0</code>.</td>
+            </tr>
+          </table>
+
+          <h3>Payload</h3>
+<pre><code>{
+  <span class="key">"text"</span>: <span class="string">"Texto longo para streaming em tempo real."</span>,
+  <span class="key">"voice"</span>: <span class="string">"pm_alex"</span>,
+  <span class="key">"speed"</span>: <span class="num">1.2</span>
+}</code></pre>
+
+          <h3>Resposta (200 - Streaming)</h3>
+          <table>
+            <tr><th>Header</th><th>Valor</th></tr>
+            <tr><td><code>Content-Type</code></td><td><code>audio/mpeg</code></td></tr>
+            <tr><td><code>Transfer-Encoding</code></td><td><code>chunked</code></td></tr>
+            <tr><td><code>Content-Disposition</code></td><td><code>attachment; filename="tts_stream.mp3"</code></td></tr>
+          </table>
+          <p>O audio e enviado em chunks MP3 a 256kbps conforme cada trecho e sintetizado.</p>
+
+          <div class="info-box warn">
+            <span class="icon">&#9888;</span>
+            <div><strong>Streaming:</strong> O formato de saida e sempre MP3. Nao ha opcao de formato WAV para streaming. Cada chunk e um segmento MP3 independente.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== EXEMPLOS =================== -->
+
+    <!-- cURL -->
+    <section id="ex-curl">
+      <h2>Exemplos de Uso</h2>
+
+      <h3>cURL</h3>
+<pre><code><span class="comment"># Verificar status</span>
+curl http://localhost:8880/health
+
+<span class="comment"># Listar vozes</span>
+curl http://localhost:8880/voices
+
+<span class="comment"># Gerar MP3 (payload minimo)</span>
+curl -X POST http://localhost:8880/tts \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Ola, mundo!"}' \
+  --output audio.mp3
+
+<span class="comment"># Gerar MP3 (payload completo)</span>
+curl -X POST http://localhost:8880/tts \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Testando a API Kokoro.","voice":"pm_alex","speed":1.2,"format":"mp3"}' \
+  --output audio_alex.mp3
+
+<span class="comment"># Gerar WAV</span>
+curl -X POST http://localhost:8880/tts \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Audio em formato WAV.","format":"wav"}' \
+  --output audio.wav
+
+<span class="comment"># Streaming (salvar)</span>
+curl -X POST http://localhost:8880/tts/stream \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Texto longo para streaming...","voice":"pf_dora","speed":1.0}' \
+  --output stream.mp3
+
+<span class="comment"># Streaming (playback direto com ffplay)</span>
+curl -sN -X POST http://localhost:8880/tts/stream \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Reproducao em tempo real."}' | ffplay -nodisp -autoexit -</code></pre>
+    </section>
+
+    <!-- JavaScript -->
+    <section id="ex-js">
+      <h3>JavaScript / Fetch</h3>
+<pre><code><span class="comment">// Gerar e reproduzir audio</span>
+<span class="key">async function</span> speak(text, voice = <span class="string">"pf_dora"</span>, speed = <span class="num">1.0</span>) {
+  <span class="key">const</span> response = <span class="key">await</span> fetch(<span class="string">"http://localhost:8880/tts"</span>, {
+    method: <span class="string">"POST"</span>,
+    headers: { <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span> },
+    body: JSON.stringify({ text, voice, speed, format: <span class="string">"mp3"</span> }),
+  });
+
+  <span class="key">const</span> blob = <span class="key">await</span> response.blob();
+  <span class="key">const</span> url = URL.createObjectURL(blob);
+  <span class="key">const</span> audio = <span class="key">new</span> Audio(url);
+  audio.play();
+}
+
+speak(<span class="string">"Ola! Testando a API Kokoro."</span>);
+
+
+<span class="comment">// Streaming com playback em tempo real</span>
+<span class="key">async function</span> speakStream(text, voice = <span class="string">"pf_dora"</span>, speed = <span class="num">1.0</span>) {
+  <span class="key">const</span> response = <span class="key">await</span> fetch(<span class="string">"http://localhost:8880/tts/stream"</span>, {
+    method: <span class="string">"POST"</span>,
+    headers: { <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span> },
+    body: JSON.stringify({ text, voice, speed }),
+  });
+
+  <span class="comment">// Coletar todos os chunks e reproduzir</span>
+  <span class="key">const</span> blob = <span class="key">await</span> response.blob();
+  <span class="key">const</span> url = URL.createObjectURL(blob);
+  <span class="key">new</span> Audio(url).play();
+}
+
+
+<span class="comment">// Download como arquivo</span>
+<span class="key">async function</span> download(text, filename = <span class="string">"audio.mp3"</span>) {
+  <span class="key">const</span> response = <span class="key">await</span> fetch(<span class="string">"http://localhost:8880/tts"</span>, {
+    method: <span class="string">"POST"</span>,
+    headers: { <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span> },
+    body: JSON.stringify({ text }),
+  });
+
+  <span class="key">const</span> blob = <span class="key">await</span> response.blob();
+  <span class="key">const</span> a = document.createElement(<span class="string">"a"</span>);
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}</code></pre>
+    </section>
+
+    <!-- Python -->
+    <section id="ex-python">
+      <h3>Python / Requests</h3>
+<pre><code><span class="key">import</span> requests
+
+BASE = <span class="string">"http://localhost:8880"</span>
+
+<span class="comment"># Verificar status</span>
+health = requests.get(f<span class="string">"{BASE}/health"</span>).json()
+print(health)
+<span class="comment"># {'status': 'ok', 'device': 'cuda', 'model_loaded': True}</span>
+
+<span class="comment"># Listar vozes</span>
+voices = requests.get(f<span class="string">"{BASE}/voices"</span>).json()
+<span class="key">for</span> v <span class="key">in</span> voices:
+    print(f<span class="string">"  {v['id']} - {v['name']} ({v['gender']})"</span>)
+
+<span class="comment"># Gerar MP3</span>
+resp = requests.post(f<span class="string">"{BASE}/tts"</span>, json={
+    <span class="string">"text"</span>: <span class="string">"Ola! Testando a API Kokoro com Python."</span>,
+    <span class="string">"voice"</span>: <span class="string">"pf_dora"</span>,
+    <span class="string">"speed"</span>: <span class="num">1.0</span>,
+    <span class="string">"format"</span>: <span class="string">"mp3"</span>,
+})
+<span class="key">with</span> open(<span class="string">"audio.mp3"</span>, <span class="string">"wb"</span>) <span class="key">as</span> f:
+    f.write(resp.content)
+
+<span class="comment"># Gerar WAV</span>
+resp = requests.post(f<span class="string">"{BASE}/tts"</span>, json={
+    <span class="string">"text"</span>: <span class="string">"Audio em WAV sem compressao."</span>,
+    <span class="string">"format"</span>: <span class="string">"wav"</span>,
+})
+<span class="key">with</span> open(<span class="string">"audio.wav"</span>, <span class="string">"wb"</span>) <span class="key">as</span> f:
+    f.write(resp.content)
+
+<span class="comment"># Streaming - salvar chunks conforme chegam</span>
+resp = requests.post(f<span class="string">"{BASE}/tts/stream"</span>, json={
+    <span class="string">"text"</span>: <span class="string">"Texto longo para demonstrar o streaming em tempo real."</span>,
+    <span class="string">"voice"</span>: <span class="string">"pm_alex"</span>,
+    <span class="string">"speed"</span>: <span class="num">1.1</span>,
+}, stream=<span class="num">True</span>)
+
+<span class="key">with</span> open(<span class="string">"stream.mp3"</span>, <span class="string">"wb"</span>) <span class="key">as</span> f:
+    <span class="key">for</span> chunk <span class="key">in</span> resp.iter_content(chunk_size=<span class="num">8192</span>):
+        f.write(chunk)
+
+<span class="comment"># Todas as vozes de uma vez</span>
+texto = <span class="string">"Cada voz tem uma personalidade unica."</span>
+<span class="key">for</span> voice_id <span class="key">in</span> [<span class="string">"pf_dora"</span>, <span class="string">"pm_alex"</span>, <span class="string">"pm_santa"</span>]:
+    r = requests.post(f<span class="string">"{BASE}/tts"</span>, json={<span class="string">"text"</span>: texto, <span class="string">"voice"</span>: voice_id})
+    <span class="key">with</span> open(f<span class="string">"{voice_id}.mp3"</span>, <span class="string">"wb"</span>) <span class="key">as</span> f:
+        f.write(r.content)</code></pre>
+    </section>
+
+    <!-- PHP -->
+    <section id="ex-php">
+      <h3>PHP / cURL</h3>
+<pre><code><span class="comment">&lt;?php</span>
+
+<span class="comment">// Gerar MP3</span>
+$ch = curl_init(<span class="string">'http://localhost:8880/tts'</span>);
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => <span class="num">true</span>,
+    CURLOPT_POST           => <span class="num">true</span>,
+    CURLOPT_HTTPHEADER     => [<span class="string">'Content-Type: application/json'</span>],
+    CURLOPT_POSTFIELDS     => json_encode([
+        <span class="string">'text'</span>   => <span class="string">'Ola! Testando a API com PHP.'</span>,
+        <span class="string">'voice'</span>  => <span class="string">'pf_dora'</span>,
+        <span class="string">'speed'</span>  => <span class="num">1.0</span>,
+        <span class="string">'format'</span> => <span class="string">'mp3'</span>,
+    ]),
+    CURLOPT_TIMEOUT => <span class="num">120</span>,
+]);
+
+$audio = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+<span class="key">if</span> ($httpCode === <span class="num">200</span>) {
+    file_put_contents(<span class="string">'audio.mp3'</span>, $audio);
+    echo <span class="string">"Salvo em audio.mp3\n"</span>;
+}
+
+<span class="comment">// Usando a classe KokoroTTS (ver example_client.php)</span>
+<span class="comment">// require 'example_client.php';</span>
+<span class="comment">// $tts = new KokoroTTS();</span>
+<span class="comment">// $tts->toFile('Texto aqui', 'saida.mp3', 'pm_alex', 1.2);</span></code></pre>
+    </section>
+
+    <!-- =================== REFERENCIA =================== -->
+
+    <!-- Errors -->
+    <section id="errors">
+      <h2>Codigos de Erro</h2>
+      <table>
+        <tr><th>Codigo</th><th>Situacao</th><th>Descricao</th></tr>
+        <tr>
+          <td><code class="status-ok">200</code></td>
+          <td>Sucesso</td>
+          <td>Audio gerado com sucesso (binario no corpo da resposta)</td>
+        </tr>
+        <tr>
+          <td><code class="status-err">400</code></td>
+          <td>Bad Request</td>
+          <td>Voz invalida, texto vazio, speed fora do range, formato invalido</td>
+        </tr>
+        <tr>
+          <td><code class="status-err">422</code></td>
+          <td>Validation Error</td>
+          <td>Campos do JSON com tipo errado ou ausentes (gerado pelo FastAPI/Pydantic)</td>
+        </tr>
+        <tr>
+          <td><code class="status-err">500</code></td>
+          <td>Internal Error</td>
+          <td>Erro na sintese do modelo (texto incompativel, modelo nao carregado)</td>
+        </tr>
+      </table>
+
+      <h3>Exemplo de erro 400</h3>
+<pre><code>{
+  <span class="key">"detail"</span>: <span class="string">"Voz 'voz_inexistente' nao disponivel. Use GET /voices."</span>
+}</code></pre>
+
+      <h3>Exemplo de erro 422 (validacao)</h3>
+<pre><code>{
+  <span class="key">"detail"</span>: [
+    {
+      <span class="key">"type"</span>: <span class="string">"string_too_short"</span>,
+      <span class="key">"loc"</span>: [<span class="string">"body"</span>, <span class="string">"text"</span>],
+      <span class="key">"msg"</span>: <span class="string">"String should have at least 1 character"</span>
+    }
+  ]
+}</code></pre>
+    </section>
+
+    <!-- Limits -->
+    <section id="limits">
+      <h2>Limites e Restricoes</h2>
+      <table>
+        <tr><th>Parametro</th><th>Limite</th></tr>
+        <tr><td>Tamanho do texto</td><td>1 a 10.000 caracteres</td></tr>
+        <tr><td>Velocidade (speed)</td><td>0.5 a 2.0</td></tr>
+        <tr><td>Formatos de saida</td><td><code>mp3</code>, <code>wav</code> (apenas /tts)</td></tr>
+        <tr><td>Formato streaming</td><td><code>mp3</code> apenas (256kbps)</td></tr>
+        <tr><td>Vozes</td><td><code>pf_dora</code>, <code>pm_alex</code>, <code>pm_santa</code></td></tr>
+        <tr><td>Idioma</td><td>Portugues brasileiro (pt-BR) apenas</td></tr>
+        <tr><td>Requisicoes simultaneas</td><td>4 (ThreadPoolExecutor)</td></tr>
+        <tr><td>Chunk maximo interno</td><td>450 caracteres por chunk de sintese</td></tr>
+      </table>
+
+      <div class="info-box warn">
+        <span class="icon">&#9888;</span>
+        <div><strong>Timeout:</strong> Textos longos (perto de 10.000 caracteres) podem levar varios segundos para sintetizar, especialmente em CPU. Configure timeout adequado no cliente (recomendado: 120s).</div>
+      </div>
+    </section>
+
+    <!-- Deploy -->
+    <section id="deploy">
+      <h2>Deploy e Configuracao</h2>
+
+      <h3>Executar localmente</h3>
+<pre><code><span class="comment"># Instalar dependencias</span>
+pip install -r requirements.txt
+
+<span class="comment"># Iniciar a API</span>
+python start.py
+
+<span class="comment"># Ou via Windows</span>
+run-kokoro.bat</code></pre>
+
+      <h3>Docker (CPU)</h3>
+<pre><code>docker build -t kokoro-tts .
+docker run -p 8880:8880 kokoro-tts</code></pre>
+
+      <h3>Docker (GPU / CUDA)</h3>
+<pre><code>docker build -f Dockerfile.cuda -t kokoro-tts-cuda .
+docker run --gpus all -p 8880:8880 kokoro-tts-cuda</code></pre>
+
+      <h3>Docker Compose</h3>
+<pre><code>docker compose up -d</code></pre>
+
+      <h3>Variaveis de Ambiente</h3>
+      <table>
+        <tr><th>Config</th><th>Valor</th><th>Descricao</th></tr>
+        <tr><td>Host</td><td><code>0.0.0.0</code></td><td>Aceita conexoes de qualquer interface</td></tr>
+        <tr><td>Port</td><td><code>8880</code></td><td>Porta HTTP</td></tr>
+        <tr><td>Device</td><td><code>auto</code></td><td>CUDA se disponivel, senao CPU</td></tr>
+        <tr><td>Workers</td><td><code>1</code></td><td>Processo unico (modelo compartilhado)</td></tr>
+      </table>
+
+      <h3>Health Check</h3>
+<pre><code><span class="comment"># Docker health check a cada 30s</span>
+curl -f http://localhost:8880/health
+
+<span class="comment"># Resposta esperada quando pronto:</span>
+{<span class="key">"status"</span>:<span class="string">"ok"</span>,<span class="key">"device"</span>:<span class="string">"cuda"</span>,<span class="key">"model_loaded"</span>:<span class="num">true</span>}</code></pre>
+
+      <div class="info-box tip">
+        <span class="icon">&#10003;</span>
+        <div><strong>Dica:</strong> O modelo e carregado no startup da API. A primeira requisicao pode demorar um pouco mais se o modelo ainda estiver sendo carregado em memoria. Use <code>GET /health</code> para verificar.</div>
+      </div>
+    </section>
+
+    <footer style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);color:var(--text-muted);font-size:13px;">
+      Evo KokoroTTS v1.0.0 &bull; Modelo Kokoro-82M &bull; FastAPI + PyTorch &bull; pt-BR
+    </footer>
+  </div>
+</div>
+
+</body>
+</html>
