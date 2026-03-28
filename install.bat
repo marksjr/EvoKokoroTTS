@@ -9,6 +9,9 @@ echo        Evo KokoroTTS - Instalador Automatico
 echo        Sintese de Voz pt-BR com IA
 echo  ====================================================
 echo.
+echo  Este instalador prepara tudo automaticamente.
+echo  Depois dele, basta executar run-kokoro.bat.
+echo.
 
 cd /d "%~dp0"
 
@@ -128,6 +131,8 @@ if defined USE_SYSTEM_PYTHON (
     set "PIP=%~dp0venv\Scripts\pip.exe"
 )
 
+if not exist "%PYTHON%" call :fail "Python configurado, mas o executavel nao foi encontrado."
+
 :: ============================================================
 :: 5. Detectar GPU e instalar PyTorch
 :: ============================================================
@@ -178,7 +183,7 @@ echo.
 echo  ====================================================
 echo   Evo KokoroTTS - INSTALACAO CONCLUIDA!
 echo.
-echo   Para iniciar, execute:
+echo   Agora o usuario so precisa abrir:
 echo     run-kokoro.bat
 echo.
 echo   A interface web abrira automaticamente

@@ -87,6 +87,15 @@ install.bat
 run-kokoro.bat
 ```
 
+For non-technical Windows users:
+
+1. Download the project as ZIP from GitHub and extract it.
+2. Open the extracted folder.
+3. Run `install.bat` once and wait until it finishes.
+4. After that, use only `run-kokoro.bat`.
+
+If someone starts `run-kokoro.bat` before the installation is complete, the launcher now tries to repair the environment automatically by calling `install.bat`.
+
 After startup, open:
 
 - Web UI: `http://localhost:8880`
