@@ -1,8 +1,15 @@
 # Evo KokoroTTS
 
+[![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)](https://github.com/marksjr/EvoKokoroTTS)
+[![API](https://img.shields.io/badge/api-FastAPI-05998b)](https://github.com/marksjr/EvoKokoroTTS)
+[![Model](https://img.shields.io/badge/model-Kokoro--82M-black)](https://github.com/marksjr/EvoKokoroTTS)
+[![Voices](https://img.shields.io/badge/voices-54%20Kokoro%20%2B%206%20Edge-6c8aff)](https://github.com/marksjr/EvoKokoroTTS)
+
 Local **multilingual Text-to-Speech API** built with **Kokoro-82M** plus complementary **Edge TTS** voices.
 
 Generate high-quality speech in MP3 or WAV, stream audio in real time, use a FastAPI REST API, or work directly from the built-in English web UI.
+
+**Best for:** local multilingual TTS, bundled Kokoro voice coverage, simple Windows setup, and a ready-to-use browser interface.
 
 ---
 
@@ -21,6 +28,16 @@ Generate high-quality speech in MP3 or WAV, stream audio in real time, use a Fas
 
 Supported language codes:
 `pt-br`, `en-us`, `en-gb`, `es-es`, `fr-fr`, `ja-jp`, `zh-cn`, `hi-in`, `it-it`, `de-de`
+
+---
+
+## Why This Repo
+
+- **Bundled voice files**: all official Kokoro-82M v1.0 voices are already present in the repository
+- **Practical Windows setup**: installer-first workflow with local runtime helpers
+- **Two usage modes**: browser UI for direct use and REST API for integration
+- **Safer voice handling**: unavailable voices are blocked before synthesis instead of failing late
+- **Broader language reach**: Kokoro voices plus Edge-only fallback voices where useful
 
 ---
 
@@ -210,6 +227,24 @@ Use `GET /voices` to inspect the full catalog returned by the running instance.
 
 ---
 
+## Tested Voices
+
+The following voices were tested successfully in this project after the recent update:
+
+- `pf_dora` for Brazilian Portuguese
+- `pm_alex` for Brazilian Portuguese
+- `bf_alice` for British English
+- `zf_xiaoxiao` for Chinese
+
+Chinese voice support also required these runtime dependencies, now included in `requirements.txt`:
+
+- `ordered-set`
+- `pypinyin`
+- `cn2an`
+- `jieba`
+
+---
+
 ## Dependencies
 
 Current Python dependencies include:
@@ -226,8 +261,6 @@ Current Python dependencies include:
 - `pypinyin`
 - `cn2an`
 - `jieba`
-
-The last four packages are required so the Chinese Kokoro pipeline can load correctly.
 
 ---
 
