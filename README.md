@@ -65,10 +65,6 @@ The API marks each voice as available or unavailable and rejects requests for mi
 - **Windows 10/11** (64-bit)
 - **espeak-ng** required for Kokoro synthesis
 
-Recommended easiest launcher for non-technical users:
-
-- `Instalar e Abrir Evo KokoroTTS.bat`
-
 The installer already handles:
 
 - **Python 3.11 Embedded**: bundled zip included in the repo, extracts automatically
@@ -98,9 +94,8 @@ For non-technical Windows users:
 
 1. Download the project as ZIP from GitHub and extract it.
 2. Open the extracted folder.
-3. Run `Instalar e Abrir Evo KokoroTTS.bat`.
+3. Run `start.bat` — it will install everything automatically on the first run.
 4. If `espeak-ng` is missing, the bundled installer will open — just click "Next" to install.
-5. After the first setup, you can use only `start.bat`.
 
 ### Offline / VM Installation
 
