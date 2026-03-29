@@ -68,7 +68,7 @@ echo.
 echo  To stop, close this window or press Ctrl+C.
 echo.
 
-start "" powershell -WindowStyle Hidden -Command "Start-Sleep 4; Start-Process 'http://localhost:8880'"
+start "" powershell -WindowStyle Hidden -Command "for ($i=0; $i -lt 60; $i++) { try { $r = Invoke-WebRequest -Uri 'http://localhost:8880/health' -UseBasicParsing -TimeoutSec 2; if ($r.StatusCode -eq 200) { Start-Process 'http://localhost:8880'; break } } catch {} Start-Sleep 2 }"
 "%PYTHON_CMD%" start.py
 echo.
 echo  Server stopped.
