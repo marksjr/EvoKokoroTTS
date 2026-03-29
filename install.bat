@@ -30,6 +30,25 @@ if exist "python_embedded\python.exe" (
     goto :check_espeak
 )
 
+:: Verificar se existe o zip bundled do Python na pasta do projeto
+if exist "%~dp0python_embedded.zip" (
+    echo   Encontrado python_embedded.zip bundled. Extraindo...
+    mkdir python_embedded 2>nul
+    powershell -Command "Expand-Archive -Path 'python_embedded.zip' -DestinationPath 'python_embedded' -Force"
+    if errorlevel 1 goto :fail_python_extract
+    :: Habilitar pip no embedded Python
+    powershell -Command "(Get-Content 'python_embedded\python311._pth') -replace '#import site','import site' | Set-Content 'python_embedded\python311._pth'"
+    :: Instalar pip
+    powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'python_embedded\get-pip.py' }"
+    if errorlevel 1 goto :fail_pip
+    python_embedded\python.exe python_embedded\get-pip.py >nul 2>&1
+    if errorlevel 1 goto :fail_pip
+    del python_embedded\get-pip.py 2>nul
+    set "PYTHON=%~dp0python_embedded\python.exe"
+    echo   Python 3.11 Embedded extraido e configurado com sucesso.
+    goto :check_espeak
+)
+
 where python >nul 2>&1
 if %errorlevel% equ 0 (
     for /f "tokens=*" %%i in ('python --version 2^>^&1') do set pyver=%%i
@@ -43,10 +62,12 @@ if %errorlevel% equ 0 (
         echo   A versao encontrada nao e compativel.
         echo   O instalador vai usar Python 3.11 embedded para evitar erros.
         call :download_python
+        if errorlevel 1 goto :fail_end
     )
 ) else (
     echo   Python nao encontrado. Baixando Python Embedded...
     call :download_python
+    if errorlevel 1 goto :fail_end
 )
 
 :: ============================================================
@@ -115,7 +136,9 @@ if exist "%ESPEAK_PORTABLE_DIR%\espeak-ng.exe" (
     goto :check_ffmpeg
 )
 
-echo   Falha ao instalar espeak-ng.
+echo.
+echo  ERRO: Falha ao instalar espeak-ng.
+echo.
 pause
 exit /b 1
 
@@ -159,16 +182,25 @@ if exist "%~dp0ffmpeg\bin\ffmpeg.exe" (
     goto :setup_venv
 )
 
-echo   ffmpeg nao encontrado.
 if exist "%~dp0ffmpeg_bundled\ffmpeg.exe" (
     echo   Copiando ffmpeg da pasta bundled...
     mkdir ffmpeg 2>nul
     copy /y "%~dp0ffmpeg_bundled\*.exe" ffmpeg\ >nul
     set "PATH=%~dp0ffmpeg;%PATH%"
     echo   ffmpeg configurado com sucesso.
-) else (
-    echo   Baixando ffmpeg (isso pode levar alguns minutos)...
-    call :download_ffmpeg
+    goto :setup_venv
+)
+
+echo   ffmpeg nao encontrado. Baixando (isso pode levar alguns minutos)...
+call :download_ffmpeg
+if errorlevel 1 (
+    echo.
+    echo  ERRO: Falha ao baixar o ffmpeg.
+    echo  Baixe manualmente de: https://github.com/BtbN/FFmpeg-Builds/releases
+    echo  Extraia ffmpeg.exe e ffprobe.exe na pasta ffmpeg_bundled\
+    echo.
+    pause
+    exit /b 1
 )
 
 :: ============================================================
@@ -187,7 +219,13 @@ if defined USE_SYSTEM_PYTHON (
     set "PIP=%~dp0venv\Scripts\pip.exe"
 )
 
-if not exist "%PYTHON%" call :fail "Python configurado, mas o executavel nao foi encontrado."
+if not exist "%PYTHON%" (
+    echo.
+    echo  ERRO: Python configurado, mas o executavel nao foi encontrado.
+    echo.
+    pause
+    exit /b 1
+)
 
 :: ============================================================
 :: 5. Detectar GPU e instalar PyTorch
@@ -197,7 +235,13 @@ echo [5/6] Detectando hardware e instalando dependencias...
 
 echo   Atualizando pip...
 "%PYTHON%" -m pip install --upgrade pip setuptools wheel
-if errorlevel 1 call :fail "Falha ao atualizar pip/setuptools/wheel."
+if errorlevel 1 (
+    echo.
+    echo  ERRO: Falha ao atualizar pip/setuptools/wheel.
+    echo.
+    pause
+    exit /b 1
+)
 
 :: Verificar se NVIDIA GPU esta presente
 set "HAS_GPU=0"
@@ -209,20 +253,38 @@ if %errorlevel% equ 0 (
     echo   Instalando PyTorch com suporte CUDA...
     echo.
     "%PYTHON%" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
-    if errorlevel 1 call :fail "Falha ao instalar PyTorch com CUDA."
+    if errorlevel 1 (
+        echo.
+        echo  ERRO: Falha ao instalar PyTorch com CUDA.
+        echo.
+        pause
+        exit /b 1
+    )
 ) else (
     echo.
     echo   Nenhuma GPU NVIDIA detectada. Usando CPU.
     echo   Instalando PyTorch versao CPU (mais leve)...
     echo.
     "%PYTHON%" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-    if errorlevel 1 call :fail "Falha ao instalar PyTorch para CPU."
+    if errorlevel 1 (
+        echo.
+        echo  ERRO: Falha ao instalar PyTorch para CPU.
+        echo.
+        pause
+        exit /b 1
+    )
 )
 
 echo.
 echo   Instalando dependencias do projeto...
 "%PYTHON%" -m pip install -r requirements.txt
-if errorlevel 1 call :fail "Falha ao instalar as dependencias do projeto."
+if errorlevel 1 (
+    echo.
+    echo  ERRO: Falha ao instalar as dependencias do projeto.
+    echo.
+    pause
+    exit /b 1
+)
 
 :: ============================================================
 :: 6. Verificar instalacao
@@ -249,9 +311,24 @@ echo.
 pause
 exit /b 0
 
-:fail
+:fail_python_extract
 echo.
-echo  ERRO: %~1
+echo  ERRO: Falha ao extrair o Python Embedded do zip bundled.
+echo.
+pause
+exit /b 1
+
+:fail_pip
+echo.
+echo  ERRO: Falha ao configurar pip no Python Embedded.
+echo  Verifique sua conexao com a internet (necessario para baixar pip).
+echo.
+pause
+exit /b 1
+
+:fail_end
+echo.
+echo  A instalacao foi interrompida devido a um erro.
 echo.
 pause
 exit /b 1
@@ -263,31 +340,43 @@ exit /b 1
 if exist "python_embedded\python.exe" (
     set "PYTHON=%~dp0python_embedded\python.exe"
     echo   Python 3.11 Embedded ja esta pronto.
-    goto :eof
+    exit /b 0
 )
 
 echo   Baixando Python 3.11 Embedded...
 mkdir python_embedded 2>nul
 powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip' -OutFile 'python_embedded\python.zip' }"
-if errorlevel 1 call :fail "Falha ao baixar o Python Embedded."
+if errorlevel 1 (
+    echo   ERRO: Falha ao baixar o Python Embedded.
+    exit /b 1
+)
 powershell -Command "Expand-Archive -Path 'python_embedded\python.zip' -DestinationPath 'python_embedded' -Force"
-if errorlevel 1 call :fail "Falha ao extrair o Python Embedded."
+if errorlevel 1 (
+    echo   ERRO: Falha ao extrair o Python Embedded.
+    exit /b 1
+)
 del python_embedded\python.zip 2>nul
 
 :: Habilitar pip no embedded Python
 powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'python_embedded\get-pip.py' }"
-if errorlevel 1 call :fail "Falha ao baixar o instalador do pip."
+if errorlevel 1 (
+    echo   ERRO: Falha ao baixar o instalador do pip.
+    exit /b 1
+)
 
 :: Descomentar import site no python311._pth
 powershell -Command "(Get-Content 'python_embedded\python311._pth') -replace '#import site','import site' | Set-Content 'python_embedded\python311._pth'"
 
 python_embedded\python.exe python_embedded\get-pip.py >nul 2>&1
-if errorlevel 1 call :fail "Falha ao instalar o pip no Python Embedded."
+if errorlevel 1 (
+    echo   ERRO: Falha ao instalar o pip no Python Embedded.
+    exit /b 1
+)
 del python_embedded\get-pip.py 2>nul
 
 set "PYTHON=%~dp0python_embedded\python.exe"
 echo   Python 3.11 Embedded instalado com sucesso.
-goto :eof
+exit /b 0
 
 :: ============================================================
 :: FUNCAO: Baixar ffmpeg
@@ -296,17 +385,26 @@ goto :eof
 echo   Baixando ffmpeg...
 mkdir ffmpeg 2>nul
 powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip' -OutFile 'ffmpeg\ffmpeg.zip' }"
-if errorlevel 1 call :fail "Falha ao baixar o ffmpeg."
+if errorlevel 1 (
+    echo   ERRO: Falha ao baixar o ffmpeg.
+    exit /b 1
+)
 powershell -Command "Expand-Archive -Path 'ffmpeg\ffmpeg.zip' -DestinationPath 'ffmpeg\temp' -Force"
-if errorlevel 1 call :fail "Falha ao extrair o ffmpeg."
+if errorlevel 1 (
+    echo   ERRO: Falha ao extrair o ffmpeg.
+    exit /b 1
+)
 :: Mover executaveis para pasta ffmpeg
 powershell -Command "Get-ChildItem 'ffmpeg\temp' -Recurse -Filter '*.exe' | Move-Item -Destination 'ffmpeg\' -Force"
-if errorlevel 1 call :fail "Falha ao preparar os executaveis do ffmpeg."
+if errorlevel 1 (
+    echo   ERRO: Falha ao preparar os executaveis do ffmpeg.
+    exit /b 1
+)
 rd /s /q ffmpeg\temp 2>nul
 del ffmpeg\ffmpeg.zip 2>nul
 set "PATH=%~dp0ffmpeg;%PATH%"
 echo   ffmpeg instalado com sucesso.
-goto :eof
+exit /b 0
 
 :: ============================================================
 :: FUNCAO: Baixar e extrair espeak-ng portable

@@ -71,7 +71,7 @@ Recommended easiest launcher for non-technical users:
 
 The installer already handles:
 
-- Python setup or reuse of an existing Python installation
+- **Python 3.11 Embedded**: bundled zip included in the repo, extracts automatically
 - **espeak-ng**: bundled MSI installer opens interactively (just click "Next")
 - **ffmpeg**: uses pre-bundled copy from `ffmpeg_bundled/` if present, or downloads automatically
 - PyTorch CPU or CUDA build
@@ -104,20 +104,27 @@ For non-technical Windows users:
 
 ### Offline / VM Installation
 
-For environments with slow or no internet (virtual machines, air-gapped systems), download these files in advance:
+The following components are already included in the repo and do **not** require internet:
 
-| Component | Download Link |
-|-----------|--------------|
-| **Python 3.11 Embedded (64-bit)** | [python-3.11.9-embed-amd64.zip](https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip) |
-| **Python 3.11 Embedded (32-bit)** | [python-3.11.9-embed-win32.zip](https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-win32.zip) |
-| **FFmpeg for Windows** | [ffmpeg-master-latest-win64-gpl-shared.zip](https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip) |
-| **espeak-ng** | Already included in the repo (`espeak-ng-installer.msi`) |
+| Component | Status |
+|-----------|--------|
+| **Python 3.11 Embedded** | Included (`python_embedded.zip`, 11 MB) |
+| **espeak-ng** | Included (`espeak-ng-installer.msi`, 13 MB) |
+| **ffmpeg** | **Must be added manually** (too large for GitHub) |
+
+For ffmpeg, download in advance on a machine with internet:
+
+| Build | Download Link |
+|-------|--------------|
+| **FFmpeg Windows 64-bit (shared)** | [ffmpeg-master-latest-win64-gpl-shared.zip](https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip) |
+| **FFmpeg Windows 64-bit (static)** | [ffmpeg-master-latest-win64-gpl.zip](https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip) |
+| **All FFmpeg builds** | [github.com/BtbN/FFmpeg-Builds/releases](https://github.com/BtbN/FFmpeg-Builds/releases) |
 
 Steps:
 
 1. Extract `ffmpeg.exe` + `ffprobe.exe` from the FFmpeg zip into a `ffmpeg_bundled/` folder inside the project.
-2. The `espeak-ng-installer.msi` is already included in the repo.
-3. Copy the entire project folder to the target machine and run the installer normally.
+2. Copy the entire project folder to the target machine and run the installer.
+3. Internet is still needed for PyTorch and Python packages (~200 MB on first install).
 
 If someone starts `run-kokoro.bat` before the installation is complete, the launcher now tries to repair the environment automatically by calling `install.bat`.
 
@@ -327,8 +334,9 @@ EvoKokoroTTS/
 |-- requirements.txt
 |-- doc.html
 |-- README.md
-|-- espeak-ng-installer.msi
-|-- ffmpeg_bundled/          (optional, for offline installs)
+|-- python_embedded.zip       (bundled Python 3.11)
+|-- espeak-ng-installer.msi  (bundled espeak-ng)
+|-- ffmpeg_bundled/           (optional, for offline installs)
 |-- models/
 |   `-- kokoro_voices/
 |       `-- voices/
