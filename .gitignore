@@ -1,7 +1,7 @@
 # Python
 venv/
-python_embedded/
-!python_embedded.zip
+python/
+!python.zip
 __pycache__/
 *.pyc
 *.pyo

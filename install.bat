@@ -21,9 +21,9 @@ set "ESPEAK_PORTABLE_DIR=%~dp0espeak-ng\eSpeak NG"
 echo  [1/7] Setting up Python...
 
 :: Check embedded Python already extracted
-if exist "python_embedded\python.exe" (
+if exist "python\python.exe" (
     echo         OK - Python is ready.
-    set "PYTHON=%~dp0python_embedded\python.exe"
+    set "PYTHON=%~dp0python\python.exe"
     goto :check_espeak
 )
 
@@ -41,19 +41,19 @@ if %errorlevel% equ 0 (
 )
 
 :: Extract bundled zip if available
-if exist "%~dp0python_embedded.zip" (
+if exist "%~dp0python.zip" (
     echo         Extracting bundled Python...
-    mkdir python_embedded 2>nul
-    powershell -Command "Expand-Archive -Path 'python_embedded.zip' -DestinationPath 'python_embedded' -Force"
+    mkdir python 2>nul
+    powershell -Command "Expand-Archive -Path 'python.zip' -DestinationPath 'python' -Force"
     if errorlevel 1 goto :fail_python_extract
-    powershell -Command "(Get-Content 'python_embedded\python311._pth') -replace '#import site','import site' | Set-Content 'python_embedded\python311._pth'"
+    powershell -Command "(Get-Content 'python\python311._pth') -replace '#import site','import site' | Set-Content 'python\python311._pth'"
     echo         Setting up package manager...
-    powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'python_embedded\get-pip.py' }"
+    powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'python\get-pip.py' }"
     if errorlevel 1 goto :fail_pip
-    python_embedded\python.exe python_embedded\get-pip.py >nul 2>&1
+    python\python.exe python\get-pip.py >nul 2>&1
     if errorlevel 1 goto :fail_pip
-    del python_embedded\get-pip.py 2>nul
-    set "PYTHON=%~dp0python_embedded\python.exe"
+    del python\get-pip.py 2>nul
+    set "PYTHON=%~dp0python\python.exe"
     echo         OK - Python extracted and configured.
     goto :check_espeak
 )
@@ -263,7 +263,7 @@ if not exist "%PYTHON%" (
     echo.
     echo  ERROR: Python was not found.
     echo.
-    echo  Try deleting the python_embedded folder
+    echo  Try deleting the python folder
     echo  and running this installer again.
     echo.
     pause
@@ -360,7 +360,7 @@ exit /b 1
 :fail_python_extract
 echo.
 echo  ERROR: Could not extract Python.
-echo  The python_embedded.zip file may be corrupted.
+echo  The python.zip file may be corrupted.
 echo  Try downloading the project again from GitHub.
 echo.
 pause
@@ -381,51 +381,51 @@ echo  INSTALLATION WAS INTERRUPTED
 echo.
 echo  Check the errors above and try again.
 echo  If the problem persists, try deleting the
-echo  python_embedded and venv folders, then run again.
+echo  python and venv folders, then run again.
 echo.
 pause
 exit /b 1
 
 :: FUNCTION: Download Python Embedded
 :download_python
-if exist "python_embedded\python.exe" (
-    set "PYTHON=%~dp0python_embedded\python.exe"
+if exist "python\python.exe" (
+    set "PYTHON=%~dp0python\python.exe"
     echo         OK - Python is ready.
     exit /b 0
 )
 
 echo         Downloading Python 3.11 (about 11 MB)...
-mkdir python_embedded 2>nul
-powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip' -OutFile 'python_embedded\python.zip' }"
+mkdir python 2>nul
+powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip' -OutFile 'python\python.zip' }"
 if errorlevel 1 (
     echo         Download failed. Check your connection.
     exit /b 1
 )
 echo         Extracting...
-powershell -Command "Expand-Archive -Path 'python_embedded\python.zip' -DestinationPath 'python_embedded' -Force"
+powershell -Command "Expand-Archive -Path 'python\python.zip' -DestinationPath 'python' -Force"
 if errorlevel 1 (
     echo         Extraction failed.
     exit /b 1
 )
-del python_embedded\python.zip 2>nul
+del python\python.zip 2>nul
 
 echo         Setting up package manager...
-powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'python_embedded\get-pip.py' }"
+powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'python\get-pip.py' }"
 if errorlevel 1 (
     echo         Download failed.
     exit /b 1
 )
 
-powershell -Command "(Get-Content 'python_embedded\python311._pth') -replace '#import site','import site' | Set-Content 'python_embedded\python311._pth'"
+powershell -Command "(Get-Content 'python\python311._pth') -replace '#import site','import site' | Set-Content 'python\python311._pth'"
 
-python_embedded\python.exe python_embedded\get-pip.py >nul 2>&1
+python\python.exe python\get-pip.py >nul 2>&1
 if errorlevel 1 (
     echo         Setup failed.
     exit /b 1
 )
-del python_embedded\get-pip.py 2>nul
+del python\get-pip.py 2>nul
 
-set "PYTHON=%~dp0python_embedded\python.exe"
+set "PYTHON=%~dp0python\python.exe"
 echo         OK - Python installed.
 exit /b 0
 

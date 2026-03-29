@@ -77,8 +77,8 @@ goto :eof
 
 :resolve_python
 set "PYTHON_CMD="
-if exist "%~dp0python_embedded\python.exe" (
-    set "PYTHON_CMD=%~dp0python_embedded\python.exe"
+if exist "%~dp0python\python.exe" (
+    set "PYTHON_CMD=%~dp0python\python.exe"
 ) else if exist "%~dp0venv\Scripts\python.exe" (
     set "PYTHON_CMD=%~dp0venv\Scripts\python.exe"
 )

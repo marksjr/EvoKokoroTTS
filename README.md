@@ -103,7 +103,7 @@ The following components are already included in the repo and do **not** require
 
 | Component | Status |
 |-----------|--------|
-| **Python 3.11 Embedded** | Included (`python_embedded.zip`, 11 MB) |
+| **Python 3.11 Embedded** | Included (`python.zip`, 11 MB) |
 | **espeak-ng** | Included (`espeak-ng-installer.msi`, 13 MB) |
 | **ffmpeg** | **Must be added manually** (too large for GitHub) |
 
@@ -329,7 +329,7 @@ EvoKokoroTTS/
 |-- requirements.txt
 |-- doc.html
 |-- README.md
-|-- python_embedded.zip       (bundled Python 3.11)
+|-- python.zip       (bundled Python 3.11)
 |-- espeak-ng-installer.msi  (bundled espeak-ng)
 |-- ffmpeg/                  (add ffmpeg.exe here for offline installs)
 |-- models/
