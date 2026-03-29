@@ -174,15 +174,6 @@ if exist "%~dp0ffmpeg\bin\ffmpeg.exe" (
     goto :setup_venv
 )
 
-if exist "%~dp0ffmpeg_bundled\ffmpeg.exe" (
-    echo         Setting up ffmpeg from project folder...
-    mkdir ffmpeg 2>nul
-    copy /y "%~dp0ffmpeg_bundled\*.exe" ffmpeg\ >nul
-    set "PATH=%~dp0ffmpeg;%PATH%"
-    echo         OK - ffmpeg configured.
-    goto :setup_venv
-)
-
 echo         ffmpeg not found. Downloading (~90 MB)...
 call :download_ffmpeg
 if errorlevel 1 goto :ffmpeg_browser_fallback
@@ -196,8 +187,8 @@ echo  INSTRUCTIONS:
 echo  1. Your browser will open with the download link.
 echo  2. Save the ZIP file anywhere on your computer.
 echo  3. Extract ffmpeg.exe and ffprobe.exe from the ZIP.
-echo  4. Place them in the ffmpeg_bundled folder:
-echo     %~dp0ffmpeg_bundled\
+echo  4. Place them in the ffmpeg folder:
+echo     %~dp0ffmpeg\
 echo  5. Run this installer again.
 echo.
 start "" "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"

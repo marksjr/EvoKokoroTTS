@@ -6,13 +6,10 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Runtime-extracted tools
-ffmpeg/
+# Runtime tools (ffmpeg is too large for git, add manually for offline installs)
+ffmpeg/*
+!ffmpeg/.gitkeep
 espeak-ng/
-
-# ffmpeg bundled (too large for git, distribute manually)
-ffmpeg_bundled/*
-!ffmpeg_bundled/.gitkeep
 
 # Generated audio files
 *.mp3

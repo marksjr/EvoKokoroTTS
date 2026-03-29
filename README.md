@@ -69,7 +69,7 @@ The installer already handles:
 
 - **Python 3.11 Embedded**: bundled zip included in the repo, extracts automatically
 - **espeak-ng**: bundled MSI installer opens interactively (just click "Next")
-- **ffmpeg**: uses pre-bundled copy from `ffmpeg_bundled/` if present, or downloads automatically
+- **ffmpeg**: uses copy from `ffmpeg/` if present, or downloads automatically
 - PyTorch CPU or CUDA build
 - Python dependencies from `requirements.txt`
 
@@ -117,7 +117,7 @@ For ffmpeg, download in advance on a machine with internet:
 
 Steps:
 
-1. Extract `ffmpeg.exe` + `ffprobe.exe` from the FFmpeg zip into a `ffmpeg_bundled/` folder inside the project.
+1. Extract `ffmpeg.exe` + `ffprobe.exe` from the FFmpeg zip into the `ffmpeg/` folder inside the project.
 2. Copy the entire project folder to the target machine and run the installer.
 3. Internet is still needed for PyTorch and Python packages (~200 MB on first install).
 
@@ -331,7 +331,7 @@ EvoKokoroTTS/
 |-- README.md
 |-- python_embedded.zip       (bundled Python 3.11)
 |-- espeak-ng-installer.msi  (bundled espeak-ng)
-|-- ffmpeg_bundled/           (optional, for offline installs)
+|-- ffmpeg/                  (add ffmpeg.exe here for offline installs)
 |-- models/
 |   `-- kokoro_voices/
 |       `-- voices/
