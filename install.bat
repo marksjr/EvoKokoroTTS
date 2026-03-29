@@ -234,7 +234,7 @@ echo.
 echo [5/6] Detectando hardware e instalando dependencias...
 
 echo   Atualizando pip...
-"%PYTHON%" -m pip install --upgrade pip setuptools wheel
+"%PYTHON%" -m pip install --upgrade pip "setuptools<82" wheel
 if errorlevel 1 goto :fail_pip_upgrade
 
 :: Verificar se NVIDIA GPU esta presente
