@@ -66,11 +66,11 @@ async def root():
 
 @app.get("/doc.html", include_in_schema=False)
 async def doc_page():
-    """Serve a página de documentação."""
-    doc_file = ROOT_DIR / "doc.html"
+    """Serves the documentation page."""
+    doc_file = STATIC_DIR / "doc.html"
     if doc_file.exists():
         return FileResponse(doc_file)
-    return {"error": "doc.html não encontrado"}
+    return {"error": "doc.html not found"}
 
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")

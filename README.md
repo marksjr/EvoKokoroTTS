@@ -13,6 +13,14 @@ Generate high-quality speech in MP3 or WAV, stream audio in real time, use a Fas
 
 ---
 
+## Screenshots
+
+![Language selection and voice controls](screenshots/screenshot-1.png)
+
+![Voice catalog and audio generation](screenshots/screenshot-2.png)
+
+---
+
 ## Highlights
 
 - **54 official Kokoro voices included locally**
@@ -328,13 +336,13 @@ EvoKokoroTTS/
 |-- start.bat
 |-- start.py
 |-- requirements.txt
-|-- doc.html
 |-- README.md
 |-- installers/
 |   |-- python.zip              (bundled Python 3.11)
 |   |-- espeak-ng-installer.msi (bundled espeak-ng)
 |   `-- vc_redist.x64.exe       (bundled Visual C++)
-|-- ffmpeg/                  (add ffmpeg.exe here for offline installs)
+|-- ffmpeg/                     (add ffmpeg.exe here for offline installs)
+|-- screenshots/
 |-- models/
 |   `-- kokoro_voices/
 |       `-- voices/
@@ -352,7 +360,8 @@ EvoKokoroTTS/
     |-- services/
     |   `-- tts_service.py
     |-- static/
-    |   `-- index.html
+    |   |-- index.html
+    |   `-- doc.html
     `-- utils/
         |-- audio.py
         `-- text.py

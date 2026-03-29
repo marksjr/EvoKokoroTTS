@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evo KokoroTTS - Documentação</title>
+<title>Evo KokoroTTS - Documentation</title>
 <style>
   :root {
     --bg: #0d1117;
@@ -235,14 +235,14 @@
   <aside class="sidebar">
     <div class="sidebar-logo">
       <h2>Evo KokoroTTS</h2>
-      <p>v1.0.0 • Multilíngue • Kokoro-82M + Edge TTS</p>
+      <p>v1.0.0 • Multilingual • Kokoro-82M + Edge TTS</p>
     </div>
     <nav>
-      <div class="section-title">Visão Geral</div>
-      <a href="#intro">Introdução</a>
-      <a href="#specs">Especificações Técnicas</a>
-      <a href="#voices">Vozes Disponíveis</a>
-      <a href="#pipeline">Pipeline de Processamento</a>
+      <div class="section-title">Overview</div>
+      <a href="#intro">Introduction</a>
+      <a href="#specs">Technical Specifications</a>
+      <a href="#voices">Available Voices</a>
+      <a href="#pipeline">Processing Pipeline</a>
 
       <div class="section-title">Endpoints</div>
       <a href="#ep-health">GET /health</a>
@@ -251,17 +251,17 @@
       <a href="#ep-tts">POST /tts</a>
       <a href="#ep-stream">POST /tts/stream</a>
 
-      <div class="section-title">Exemplos</div>
-      <a href="#ex-languages">Como usar outros idiomas</a>
+      <div class="section-title">Examples</div>
+      <a href="#ex-languages">How to use other languages</a>
       <a href="#ex-curl">cURL</a>
       <a href="#ex-js">JavaScript / Fetch</a>
       <a href="#ex-python">Python / Requests</a>
       <a href="#ex-php">PHP / cURL</a>
 
-      <div class="section-title">Referência</div>
-      <a href="#errors">Códigos de Erro</a>
-      <a href="#limits">Limites e Restrições</a>
-      <a href="#deploy">Deploy e Configuração</a>
+      <div class="section-title">Reference</div>
+      <a href="#errors">Error Codes</a>
+      <a href="#limits">Limits and Restrictions</a>
+      <a href="#deploy">Deployment and Configuration</a>
     </nav>
   </aside>
 
@@ -269,32 +269,32 @@
     <section id="intro">
       <h1><span>Evo</span> KokoroTTS</h1>
       <p style="font-size:16px;color:var(--text);">
-        API REST local de Text-to-Speech multilíngue usando <strong>Kokoro-82M</strong> e <strong>Edge TTS</strong>.
-        Converta texto em áudio com múltiplas vozes, controle de velocidade, ajuste de pitch e streaming em tempo real.
+        Local multilingual Text-to-Speech REST API using <strong>Kokoro-82M</strong> and <strong>Edge TTS</strong>.
+        Convert text to audio with multiple voices, speed control, pitch adjustment, and real-time streaming.
       </p>
       <div class="info-box note">
         <span class="icon">&#9432;</span>
         <div>
           <strong>Base URL:</strong> <code>http://localhost:8880</code><br>
-          A API também gera documentação interativa automática em
-          <a href="http://localhost:8880/docs" target="_blank">/docs</a> (Swagger UI) e
+          The API also generates automatic interactive documentation at
+          <a href="http://localhost:8880/docs" target="_blank">/docs</a> (Swagger UI) and
           <a href="http://localhost:8880/redoc" target="_blank">/redoc</a> (ReDoc).
         </div>
       </div>
     </section>
 
     <section id="specs">
-      <h2>Especificações Técnicas</h2>
+      <h2>Technical Specifications</h2>
       <div class="specs-grid">
         <div class="spec-item">
           <div class="label">Sample Rate</div>
           <div class="value">24 kHz</div>
-          <div class="detail">Nativo do Kokoro-82M</div>
+          <div class="detail">Native to Kokoro-82M</div>
         </div>
         <div class="spec-item">
           <div class="label">MP3 Bitrate</div>
           <div class="value">320 kbps</div>
-          <div class="detail">Endpoint /tts (completo)</div>
+          <div class="detail">Endpoint /tts (full)</div>
         </div>
         <div class="spec-item">
           <div class="label">MP3 Stream</div>
@@ -304,132 +304,132 @@
         <div class="spec-item">
           <div class="label">WAV</div>
           <div class="value">16-bit PCM</div>
-          <div class="detail">Mono, 24 kHz, sem compressão</div>
+          <div class="detail">Mono, 24 kHz, uncompressed</div>
         </div>
         <div class="spec-item">
-          <div class="label">Modelo</div>
+          <div class="label">Model</div>
           <div class="value">Kokoro-82M</div>
-          <div class="detail">82M parâmetros</div>
+          <div class="detail">82M parameters</div>
         </div>
         <div class="spec-item">
           <div class="label">Device</div>
           <div class="value">Auto</div>
-          <div class="detail">CUDA (GPU) ou CPU</div>
+          <div class="detail">CUDA (GPU) or CPU</div>
         </div>
       </div>
     </section>
 
     <section id="voices">
-      <h2>Vozes Disponíveis</h2>
-      <p>O catálogo combina vozes Kokoro e Edge TTS, incluindo presets infantis em pt-BR.</p>
+      <h2>Available Voices</h2>
+      <p>The catalog combines Kokoro and Edge TTS voices, including child presets in pt-BR.</p>
       <div class="voice-grid">
         <div class="voice-card">
           <div class="name">Dora</div>
           <div class="id">pf_dora</div>
-          <div class="gender">Feminino</div>
-          <span class="badge badge-f">Feminina</span>
-          <span class="badge badge-default">Padrão</span>
+          <div class="gender">Female</div>
+          <span class="badge badge-f">Female</span>
+          <span class="badge badge-default">Default</span>
         </div>
         <div class="voice-card">
           <div class="name">Alex</div>
           <div class="id">pm_alex</div>
-          <div class="gender">Masculino</div>
-          <span class="badge badge-m">Masculina</span>
+          <div class="gender">Male</div>
+          <span class="badge badge-m">Male</span>
         </div>
         <div class="voice-card">
           <div class="name">Santa</div>
           <div class="id">pm_santa</div>
-          <div class="gender">Masculino</div>
-          <span class="badge badge-m">Masculina</span>
+          <div class="gender">Male</div>
+          <span class="badge badge-m">Male</span>
         </div>
         <div class="voice-card">
           <div class="name">Menina</div>
           <div class="id">pt_f_menina</div>
-          <div class="gender">Feminino</div>
-          <span class="badge badge-f">Infantil</span>
+          <div class="gender">Female</div>
+          <span class="badge badge-f">Child</span>
           <span class="badge badge-default">Edge + pitch</span>
         </div>
         <div class="voice-card">
           <div class="name">Menino</div>
           <div class="id">pt_m_menino</div>
-          <div class="gender">Masculino</div>
-          <span class="badge badge-m">Infantil</span>
+          <div class="gender">Male</div>
+          <span class="badge badge-m">Child</span>
           <span class="badge badge-default">Edge + pitch</span>
         </div>
       </div>
     </section>
 
     <section id="pipeline">
-      <h2>Pipeline de Processamento</h2>
-      <p>Fluxo completo desde o texto até o áudio final:</p>
+      <h2>Processing Pipeline</h2>
+      <p>Complete flow from text to final audio:</p>
       <div class="pipeline">
-        <div class="pipeline-step">Texto Bruto<small>Input do usuário</small></div>
+        <div class="pipeline-step">Raw Text<small>User input</small></div>
         <span class="pipeline-arrow">&#10132;</span>
-        <div class="pipeline-step">Pré-processamento<small>Abreviações, números, %</small></div>
+        <div class="pipeline-step">Pre-processing<small>Abbreviations, numbers, %</small></div>
         <span class="pipeline-arrow">&#10132;</span>
-        <div class="pipeline-step">Chunking<small>80-450 caracteres</small></div>
+        <div class="pipeline-step">Chunking<small>80-450 characters</small></div>
         <span class="pipeline-arrow">&#10132;</span>
-        <div class="pipeline-step">Kokoro / Edge<small>Síntese por engine</small></div>
+        <div class="pipeline-step">Kokoro / Edge<small>Synthesis by engine</small></div>
         <span class="pipeline-arrow">&#10132;</span>
-        <div class="pipeline-step">Crossfade<small>50 ms entre chunks</small></div>
+        <div class="pipeline-step">Crossfade<small>50 ms between chunks</small></div>
         <span class="pipeline-arrow">&#10132;</span>
-        <div class="pipeline-step">Normalizar<small>Pico em 0.95</small></div>
+        <div class="pipeline-step">Normalize<small>Peak at 0.95</small></div>
         <span class="pipeline-arrow">&#10132;</span>
         <div class="pipeline-step">Encode<small>MP3 320k / WAV</small></div>
       </div>
 
-      <h3>Normalização Unicode (NFC)</h3>
+      <h3>Unicode Normalization (NFC)</h3>
       <div class="info-box note">
         <span class="icon">&#9432;</span>
         <div>
-          A API normaliza automaticamente todos os textos para <strong>NFC</strong> (forma composta Unicode).
-          Isso garante que caracteres como <code>ã</code>, <code>ç</code>, <code>é</code>, <code>ô</code>, <code>ü</code>
-          sejam tratados corretamente, independentemente de como foram digitados ou copiados.
-          Aspas tipográficas, travessões e reticências Unicode também são convertidos.
+          The API automatically normalizes all text to <strong>NFC</strong> (Unicode composed form).
+          This ensures that characters like <code>&atilde;</code>, <code>&ccedil;</code>, <code>&eacute;</code>, <code>&ocirc;</code>, <code>&uuml;</code>
+          are handled correctly, regardless of how they were typed or copied.
+          Typographic quotes, em dashes, and Unicode ellipses are also converted.
         </div>
       </div>
 
-      <h3>Caracteres especiais tratados</h3>
+      <h3>Handled special characters</h3>
       <table>
-        <tr><th>Entrada</th><th>Convertido para</th></tr>
-        <tr><td><code>&ldquo; &rdquo; &laquo; &raquo;</code> (aspas tipográficas)</td><td><code>"</code> (aspas simples)</td></tr>
-        <tr><td><code>&lsquo; &rsquo;</code> (aspas simples tipográficas)</td><td><code>'</code> (apóstrofo)</td></tr>
-        <tr><td><code>&mdash; &ndash;</code> (travessão, meia-risca)</td><td><code>,</code> (pausa natural)</td></tr>
-        <tr><td><code>&hellip;</code> (reticências Unicode)</td><td><code>...</code> (três pontos)</td></tr>
-        <tr><td>Espaços especiais (no-break, thin, etc.)</td><td>Espaço normal</td></tr>
+        <tr><th>Input</th><th>Converted to</th></tr>
+        <tr><td><code>&ldquo; &rdquo; &laquo; &raquo;</code> (typographic quotes)</td><td><code>"</code> (straight quotes)</td></tr>
+        <tr><td><code>&lsquo; &rsquo;</code> (typographic single quotes)</td><td><code>'</code> (apostrophe)</td></tr>
+        <tr><td><code>&mdash; &ndash;</code> (em dash, en dash)</td><td><code>,</code> (natural pause)</td></tr>
+        <tr><td><code>&hellip;</code> (Unicode ellipsis)</td><td><code>...</code> (three dots)</td></tr>
+        <tr><td>Special spaces (no-break, thin, etc.)</td><td>Normal space</td></tr>
         <tr><td><code>&amp;</code></td><td><code>e</code></td></tr>
       </table>
 
-      <h3>Pré-processamento automático (pt-BR)</h3>
+      <h3>Automatic pre-processing (pt-BR)</h3>
       <table>
-        <tr><th>Categoria</th><th>Entrada</th><th>Expandido para</th></tr>
-        <tr><td rowspan="4">Títulos</td><td><code>Dr.</code> / <code>Dra.</code></td><td>Doutor / Doutora</td></tr>
+        <tr><th>Category</th><th>Input</th><th>Expanded to</th></tr>
+        <tr><td rowspan="4">Titles</td><td><code>Dr.</code> / <code>Dra.</code></td><td>Doutor / Doutora</td></tr>
         <tr><td><code>Sr.</code> / <code>Sra.</code> / <code>Srta.</code></td><td>Senhor / Senhora / Senhorita</td></tr>
         <tr><td><code>Prof.</code> / <code>Profa.</code></td><td>Professor / Professora</td></tr>
         <tr><td><code>Eng.</code> / <code>Adv.</code></td><td>Engenheiro / Advogado</td></tr>
-        <tr><td rowspan="3">Endereços</td><td><code>Av.</code></td><td>Avenida</td></tr>
+        <tr><td rowspan="3">Addresses</td><td><code>Av.</code></td><td>Avenida</td></tr>
         <tr><td><code>R.</code></td><td>Rua</td></tr>
-        <tr><td><code>nº</code> / <code>Nº</code> / <code>n°</code> / <code>N°</code></td><td>número</td></tr>
-        <tr><td rowspan="3">Empresas</td><td><code>Ltda.</code></td><td>Limitada</td></tr>
+        <tr><td><code>n&ordm;</code> / <code>N&ordm;</code> / <code>n&deg;</code> / <code>N&deg;</code></td><td>n&uacute;mero</td></tr>
+        <tr><td rowspan="3">Companies</td><td><code>Ltda.</code></td><td>Limitada</td></tr>
         <tr><td><code>Cia.</code></td><td>Companhia</td></tr>
-        <tr><td><code>S.A.</code></td><td>Sociedade Anônima</td></tr>
-        <tr><td rowspan="2">Contato</td><td><code>tel.</code></td><td>telefone</td></tr>
+        <tr><td><code>S.A.</code></td><td>Sociedade An&ocirc;nima</td></tr>
+        <tr><td rowspan="2">Contact</td><td><code>tel.</code></td><td>telefone</td></tr>
         <tr><td><code>cel.</code></td><td>celular</td></tr>
-        <tr><td rowspan="3">Moedas</td><td><code>R$ 50</code></td><td>50 reais</td></tr>
-        <tr><td><code>US$ 100</code></td><td>100 dólares</td></tr>
-        <tr><td><code>€ 200</code></td><td>200 euros</td></tr>
-        <tr><td>Porcentagem</td><td><code>30%</code></td><td>30 por cento</td></tr>
-        <tr><td>Ordinais</td><td><code>1º</code> a <code>10º</code> / <code>1ª</code> a <code>10ª</code></td><td>primeiro a décimo / primeira a décima</td></tr>
-        <tr><td rowspan="3">Diversos</td><td><code>etc.</code> / <code>pág.</code> / <code>págs.</code></td><td>etcétera / página / páginas</td></tr>
-        <tr><td><code>Art.</code> / <code>cap.</code> / <code>vol.</code></td><td>Artigo / capítulo / volume</td></tr>
+        <tr><td rowspan="3">Currencies</td><td><code>R$ 50</code></td><td>50 reais</td></tr>
+        <tr><td><code>US$ 100</code></td><td>100 d&oacute;lares</td></tr>
+        <tr><td><code>&euro; 200</code></td><td>200 euros</td></tr>
+        <tr><td>Percentage</td><td><code>30%</code></td><td>30 por cento</td></tr>
+        <tr><td>Ordinals</td><td><code>1&ordm;</code> to <code>10&ordm;</code> / <code>1&ordf;</code> to <code>10&ordf;</code></td><td>primeiro to d&eacute;cimo / primeira to d&eacute;cima</td></tr>
+        <tr><td rowspan="3">Miscellaneous</td><td><code>etc.</code> / <code>p&aacute;g.</code> / <code>p&aacute;gs.</code></td><td>etc&eacute;tera / p&aacute;gina / p&aacute;ginas</td></tr>
+        <tr><td><code>Art.</code> / <code>cap.</code> / <code>vol.</code></td><td>Artigo / cap&iacute;tulo / volume</td></tr>
         <tr><td><code>aprox.</code> / <code>qtd.</code> / <code>qtde.</code></td><td>aproximadamente / quantidade</td></tr>
       </table>
 
       <div class="info-box tip">
         <span class="icon">&#10003;</span>
         <div>
-          <strong>Dica:</strong> Você pode enviar texto com acentos, cedilhas e caracteres especiais normalmente.
-          A API trata tudo automaticamente: <code>"O coração da nação é São Paulo"</code> funciona perfeitamente.
+          <strong>Tip:</strong> You can send text with accents, cedillas, and special characters normally.
+          The API handles everything automatically: <code>"O cora&ccedil;&atilde;o da na&ccedil;&atilde;o &eacute; S&atilde;o Paulo"</code> works perfectly.
         </div>
       </div>
     </section>
@@ -440,10 +440,10 @@
         <div class="endpoint-header">
           <span class="method method-get">GET</span>
           <code>/health</code>
-          <span class="desc">Verificar status da API</span>
+          <span class="desc">Check API status</span>
         </div>
         <div class="endpoint-body">
-          <p>Retorna o estado atual da API, device utilizado e se o modelo está carregado.</p>
+          <p>Returns the current API state, device in use, and whether the model is loaded.</p>
 <pre><code>{
   <span class="key">"status"</span>: <span class="string">"ok"</span>,
   <span class="key">"device"</span>: <span class="string">"cuda"</span>,
@@ -458,20 +458,20 @@
         <div class="endpoint-header">
           <span class="method method-get">GET</span>
           <code>/languages</code>
-          <span class="desc">Listar idiomas disponíveis</span>
+          <span class="desc">List available languages</span>
         </div>
         <div class="endpoint-body">
-          <p>Retorna os idiomas disponíveis na instalação atual, incluindo idiomas atendidos por Kokoro e Edge TTS.</p>
+          <p>Returns the languages available in the current installation, including languages served by Kokoro and Edge TTS.</p>
 <pre><code>[
   {
     <span class="key">"id"</span>: <span class="string">"pt-br"</span>,
-    <span class="key">"label"</span>: <span class="string">"Português"</span>,
+    <span class="key">"label"</span>: <span class="string">"Portugu&ecirc;s"</span>,
     <span class="key">"kokoro_code"</span>: <span class="string">"p"</span>,
     <span class="key">"supported"</span>: <span class="key">true</span>
   },
   {
     <span class="key">"id"</span>: <span class="string">"de-de"</span>,
-    <span class="key">"label"</span>: <span class="string">"Alemão"</span>,
+    <span class="key">"label"</span>: <span class="string">"Alem&atilde;o"</span>,
     <span class="key">"kokoro_code"</span>: <span class="key">null</span>,
     <span class="key">"supported"</span>: <span class="key">true</span>
   }
@@ -485,17 +485,17 @@
         <div class="endpoint-header">
           <span class="method method-get">GET</span>
           <code>/voices</code>
-          <span class="desc">Listar vozes disponíveis</span>
+          <span class="desc">List available voices</span>
         </div>
         <div class="endpoint-body">
-          <p>Retorna a lista completa de vozes disponíveis para síntese.</p>
+          <p>Returns the complete list of voices available for synthesis.</p>
 <pre><code>[
   {
     <span class="key">"id"</span>: <span class="string">"pf_dora"</span>,
     <span class="key">"name"</span>: <span class="string">"Dora"</span>,
     <span class="key">"lang"</span>: <span class="string">"pt-br"</span>,
     <span class="key">"engine"</span>: <span class="string">"kokoro"</span>,
-    <span class="key">"description"</span>: <span class="string">"Voz feminina brasileira"</span>
+    <span class="key">"description"</span>: <span class="string">"Brazilian female voice"</span>
   },
   {
     <span class="key">"id"</span>: <span class="string">"pt_f_menina"</span>,
@@ -504,7 +504,7 @@
     <span class="key">"engine"</span>: <span class="string">"edge"</span>,
     <span class="key">"default_speed"</span>: <span class="num">1.08</span>,
     <span class="key">"default_pitch"</span>: <span class="num">46</span>,
-    <span class="key">"description"</span>: <span class="string">"Voz feminina infantil brasileira com timbre mais agudo"</span>
+    <span class="key">"description"</span>: <span class="string">"Brazilian child female voice with higher pitch"</span>
   }
 ]</code></pre>
         </div>
@@ -516,20 +516,20 @@
         <div class="endpoint-header">
           <span class="method method-post">POST</span>
           <code>/tts</code>
-          <span class="desc">Gerar áudio completo</span>
+          <span class="desc">Generate full audio</span>
         </div>
         <div class="endpoint-body">
-          <p>Sintetiza o texto completo e retorna o arquivo de áudio.</p>
+          <p>Synthesizes the complete text and returns the audio file.</p>
           <table>
-            <tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Padrão</th><th>Descrição</th></tr>
-            <tr><td><code>text</code></td><td><code>string</code></td><td><span class="required">SIM</span></td><td>-</td><td>Texto para sintetizar. De 1 a 10.000 caracteres.</td></tr>
-            <tr><td><code>voice</code></td><td><code>string</code></td><td><span class="optional">não</span></td><td><code>"pf_dora"</code></td><td>ID da voz. Use <code>GET /voices</code> para consultar o catálogo completo.</td></tr>
-            <tr><td><code>speed</code></td><td><code>float</code></td><td><span class="optional">não</span></td><td><code>1.0</code></td><td>Velocidade da fala. Em vozes Edge, <code>1.0</code> aplica o preset default da voz quando existir.</td></tr>
-            <tr><td><code>pitch</code></td><td><code>int</code></td><td><span class="optional">não</span></td><td><code>0</code></td><td>Ajuste de pitch em Hz. Faixa: <code>-80</code> a <code>80</code>. Em vozes Edge, <code>0</code> aplica o preset default.</td></tr>
-            <tr><td><code>format</code></td><td><code>string</code></td><td><span class="optional">não</span></td><td><code>"mp3"</code></td><td><code>"mp3"</code> ou <code>"wav"</code>.</td></tr>
+            <tr><th>Field</th><th>Type</th><th>Required</th><th>Default</th><th>Description</th></tr>
+            <tr><td><code>text</code></td><td><code>string</code></td><td><span class="required">YES</span></td><td>-</td><td>Text to synthesize. From 1 to 10,000 characters.</td></tr>
+            <tr><td><code>voice</code></td><td><code>string</code></td><td><span class="optional">no</span></td><td><code>"pf_dora"</code></td><td>Voice ID. Use <code>GET /voices</code> to query the full catalog.</td></tr>
+            <tr><td><code>speed</code></td><td><code>float</code></td><td><span class="optional">no</span></td><td><code>1.0</code></td><td>Speech speed. For Edge voices, <code>1.0</code> applies the voice's default preset when available.</td></tr>
+            <tr><td><code>pitch</code></td><td><code>int</code></td><td><span class="optional">no</span></td><td><code>0</code></td><td>Pitch adjustment in Hz. Range: <code>-80</code> to <code>80</code>. For Edge voices, <code>0</code> applies the default preset.</td></tr>
+            <tr><td><code>format</code></td><td><code>string</code></td><td><span class="optional">no</span></td><td><code>"mp3"</code></td><td><code>"mp3"</code> or <code>"wav"</code>.</td></tr>
           </table>
 <pre><code>{
-  <span class="key">"text"</span>: <span class="string">"Olá! Eu sou uma voz infantil em português do Brasil."</span>,
+  <span class="key">"text"</span>: <span class="string">"Ol&aacute;! Eu sou uma voz infantil em portugu&ecirc;s do Brasil."</span>,
   <span class="key">"voice"</span>: <span class="string">"pt_f_menina"</span>,
   <span class="key">"speed"</span>: <span class="num">1.08</span>,
   <span class="key">"pitch"</span>: <span class="num">46</span>,
@@ -544,19 +544,19 @@
         <div class="endpoint-header">
           <span class="method method-post">POST</span>
           <code>/tts/stream</code>
-          <span class="desc">Streaming de áudio em tempo real</span>
+          <span class="desc">Real-time audio streaming</span>
         </div>
         <div class="endpoint-body">
-          <p>Sintetiza o texto e envia o áudio em chunks conforme cada trecho fica pronto.</p>
+          <p>Synthesizes the text and sends audio in chunks as each segment becomes ready.</p>
           <table>
-            <tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Padrão</th><th>Descrição</th></tr>
-            <tr><td><code>text</code></td><td><code>string</code></td><td><span class="required">SIM</span></td><td>-</td><td>Texto para sintetizar. De 1 a 10.000 caracteres.</td></tr>
-            <tr><td><code>voice</code></td><td><code>string</code></td><td><span class="optional">não</span></td><td><code>"pf_dora"</code></td><td>ID da voz. Use <code>GET /voices</code> para consultar o catálogo completo.</td></tr>
-            <tr><td><code>speed</code></td><td><code>float</code></td><td><span class="optional">não</span></td><td><code>1.0</code></td><td>Velocidade da fala. Em vozes Edge, <code>1.0</code> aplica o preset default da voz quando existir.</td></tr>
-            <tr><td><code>pitch</code></td><td><code>int</code></td><td><span class="optional">não</span></td><td><code>0</code></td><td>Ajuste de pitch em Hz. Faixa: <code>-80</code> a <code>80</code>. Em vozes Edge, <code>0</code> aplica o preset default.</td></tr>
+            <tr><th>Field</th><th>Type</th><th>Required</th><th>Default</th><th>Description</th></tr>
+            <tr><td><code>text</code></td><td><code>string</code></td><td><span class="required">YES</span></td><td>-</td><td>Text to synthesize. From 1 to 10,000 characters.</td></tr>
+            <tr><td><code>voice</code></td><td><code>string</code></td><td><span class="optional">no</span></td><td><code>"pf_dora"</code></td><td>Voice ID. Use <code>GET /voices</code> to query the full catalog.</td></tr>
+            <tr><td><code>speed</code></td><td><code>float</code></td><td><span class="optional">no</span></td><td><code>1.0</code></td><td>Speech speed. For Edge voices, <code>1.0</code> applies the voice's default preset when available.</td></tr>
+            <tr><td><code>pitch</code></td><td><code>int</code></td><td><span class="optional">no</span></td><td><code>0</code></td><td>Pitch adjustment in Hz. Range: <code>-80</code> to <code>80</code>. For Edge voices, <code>0</code> applies the default preset.</td></tr>
           </table>
 <pre><code>{
-  <span class="key">"text"</span>: <span class="string">"Texto longo para streaming em tempo real."</span>,
+  <span class="key">"text"</span>: <span class="string">"Long text for real-time streaming."</span>,
   <span class="key">"voice"</span>: <span class="string">"pt_m_menino"</span>,
   <span class="key">"speed"</span>: <span class="num">1.05</span>,
   <span class="key">"pitch"</span>: <span class="num">28</span>
@@ -566,34 +566,34 @@
     </section>
 
     <section id="ex-languages">
-      <h2>Como usar outros idiomas</h2>
-      <p>O idioma da sintese e definido pela <code>voice</code>. Nao existe um campo separado como <code>language</code> no POST de <code>/tts</code> ou <code>/tts/stream</code>.</p>
+      <h2>How to use other languages</h2>
+      <p>The synthesis language is determined by the <code>voice</code>. There is no separate <code>language</code> field in the POST to <code>/tts</code> or <code>/tts/stream</code>.</p>
       <table>
-        <tr><th>Passo</th><th>O que fazer</th></tr>
-        <tr><td>1</td><td>Consulte <code>GET /languages</code> para ver os idiomas suportados na instalacao atual.</td></tr>
-        <tr><td>2</td><td>Consulte <code>GET /voices</code> e escolha uma voz cujo campo <code>lang</code> seja o idioma desejado.</td></tr>
-        <tr><td>3</td><td>Envie o texto usando essa <code>voice</code>. A engine correta (Kokoro ou Edge) sera escolhida automaticamente.</td></tr>
+        <tr><th>Step</th><th>What to do</th></tr>
+        <tr><td>1</td><td>Query <code>GET /languages</code> to see the languages supported in the current installation.</td></tr>
+        <tr><td>2</td><td>Query <code>GET /voices</code> and choose a voice whose <code>lang</code> field matches the desired language.</td></tr>
+        <tr><td>3</td><td>Send the text using that <code>voice</code>. The correct engine (Kokoro or Edge) will be chosen automatically.</td></tr>
       </table>
       <div class="info-box note">
         <span class="icon">&#9432;</span>
         <div>
-          <strong>Idiomas configurados nesta versao:</strong> <code>pt-br</code>, <code>en-us</code>, <code>en-gb</code>, <code>es-es</code>, <code>fr-fr</code>, <code>ja-jp</code>, <code>zh-cn</code>, <code>hi-in</code>, <code>it-it</code> e <code>de-de</code>.<br>
-          Exemplos de vozes: <code>pf_dora</code> (pt-BR), <code>af_bella</code> (en-US), <code>bf_alice</code> (en-GB), <code>ef_dora</code> (es-ES), <code>ff_siwis</code> (fr-FR), <code>jf_alpha</code> (ja-JP), <code>zf_xiaoxiao</code> (zh-CN), <code>hf_alpha</code> (hi-IN), <code>if_sara</code> (it-IT) e <code>de_f_katja</code> (de-DE).
+          <strong>Languages configured in this version:</strong> <code>pt-br</code>, <code>en-us</code>, <code>en-gb</code>, <code>es-es</code>, <code>fr-fr</code>, <code>ja-jp</code>, <code>zh-cn</code>, <code>hi-in</code>, <code>it-it</code> and <code>de-de</code>.<br>
+          Voice examples: <code>pf_dora</code> (pt-BR), <code>af_bella</code> (en-US), <code>bf_alice</code> (en-GB), <code>ef_dora</code> (es-ES), <code>ff_siwis</code> (fr-FR), <code>jf_alpha</code> (ja-JP), <code>zf_xiaoxiao</code> (zh-CN), <code>hf_alpha</code> (hi-IN), <code>if_sara</code> (it-IT) and <code>de_f_katja</code> (de-DE).
         </div>
       </div>
-<pre><code><span class="comment"># Ingles (Kokoro)</span>
+<pre><code><span class="comment"># English (Kokoro)</span>
 curl -X POST http://localhost:8880/tts \
   -H "Content-Type: application/json" \
   -d '{"text":"Hello. This is a test in English.","voice":"af_bella","speed":1.0,"format":"mp3"}' \
   --output english.mp3
 
-<span class="comment"># Espanhol (Kokoro)</span>
+<span class="comment"># Spanish (Kokoro)</span>
 curl -X POST http://localhost:8880/tts \
   -H "Content-Type: application/json" \
   -d '{"text":"Hola. Esta es una prueba en espanol.","voice":"ef_dora","speed":1.0,"format":"mp3"}' \
   --output espanol.mp3
 
-<span class="comment"># Alemao (Edge TTS)</span>
+<span class="comment"># German (Edge TTS)</span>
 curl -X POST http://localhost:8880/tts \
   -H "Content-Type: application/json" \
   -d '{"text":"Hallo. Dies ist ein Test auf Deutsch.","voice":"de_f_katja","speed":1.0,"pitch":0,"format":"mp3"}' \
@@ -601,26 +601,26 @@ curl -X POST http://localhost:8880/tts \
     </section>
 
     <section id="ex-curl">
-      <h2>Exemplos de Uso</h2>
-<pre><code><span class="comment"># Verificar status</span>
+      <h2>Usage Examples</h2>
+<pre><code><span class="comment"># Check status</span>
 curl http://localhost:8880/health
 
-<span class="comment"># Listar idiomas</span>
+<span class="comment"># List languages</span>
 curl http://localhost:8880/languages
 
-<span class="comment"># Listar vozes</span>
+<span class="comment"># List voices</span>
 curl http://localhost:8880/voices
 
-<span class="comment"># Gerar MP3 com voz infantil</span>
+<span class="comment"># Generate MP3 with child voice</span>
 curl -X POST http://localhost:8880/tts \
   -H "Content-Type: application/json" \
-  -d '{"text":"Olá! Eu sou uma voz infantil.","voice":"pt_f_menina","speed":1.08,"pitch":46,"format":"mp3"}' \
+  -d '{"text":"Ol&aacute;! Eu sou uma voz infantil.","voice":"pt_f_menina","speed":1.08,"pitch":46,"format":"mp3"}' \
   --output audio_infantil.mp3
 
 <span class="comment"># Streaming</span>
 curl -X POST http://localhost:8880/tts/stream \
   -H "Content-Type: application/json" \
-  -d '{"text":"Texto longo para streaming...","voice":"pt_m_menino","speed":1.05,"pitch":28}' \
+  -d '{"text":"Long text for streaming...","voice":"pt_m_menino","speed":1.05,"pitch":28}' \
   --output stream.mp3</code></pre>
     </section>
 
@@ -645,7 +645,7 @@ curl -X POST http://localhost:8880/tts/stream \
 BASE = <span class="string">"http://localhost:8880"</span>
 
 resp = requests.post(f<span class="string">"{BASE}/tts"</span>, json={
-    <span class="string">"text"</span>: <span class="string">"Olá! Testando a API com voz infantil."</span>,
+    <span class="string">"text"</span>: <span class="string">"Hello! Testing the API with child voice."</span>,
     <span class="string">"voice"</span>: <span class="string">"pt_f_menina"</span>,
     <span class="string">"speed"</span>: <span class="num">1.08</span>,
     <span class="string">"pitch"</span>: <span class="num">46</span>,
@@ -665,7 +665,7 @@ curl_setopt_array($ch, [
     CURLOPT_POST           => <span class="num">true</span>,
     CURLOPT_HTTPHEADER     => [<span class="string">'Content-Type: application/json'</span>],
     CURLOPT_POSTFIELDS     => json_encode([
-        <span class="string">'text'</span>   => <span class="string">'Olá! Testando a API com voz infantil.'</span>,
+        <span class="string">'text'</span>   => <span class="string">'Hello! Testing the API with child voice.'</span>,
         <span class="string">'voice'</span>  => <span class="string">'pt_f_menina'</span>,
         <span class="string">'speed'</span>  => <span class="num">1.08</span>,
         <span class="string">'pitch'</span>  => <span class="num">46</span>,
@@ -676,45 +676,45 @@ curl_setopt_array($ch, [
     </section>
 
     <section id="errors">
-      <h2>Códigos de Erro</h2>
+      <h2>Error Codes</h2>
       <table>
-        <tr><th>Código</th><th>Situação</th><th>Descrição</th></tr>
-        <tr><td><code class="status-ok">200</code></td><td>Sucesso</td><td>Áudio gerado com sucesso.</td></tr>
-        <tr><td><code class="status-err">400</code></td><td>Bad Request</td><td>Voz inválida, texto vazio, speed fora do range, formato inválido.</td></tr>
-        <tr><td><code class="status-err">422</code></td><td>Validation Error</td><td>Campos do JSON com tipo errado ou ausentes.</td></tr>
-        <tr><td><code class="status-err">500</code></td><td>Internal Error</td><td>Erro na síntese.</td></tr>
+        <tr><th>Code</th><th>Situation</th><th>Description</th></tr>
+        <tr><td><code class="status-ok">200</code></td><td>Success</td><td>Audio generated successfully.</td></tr>
+        <tr><td><code class="status-err">400</code></td><td>Bad Request</td><td>Invalid voice, empty text, speed out of range, invalid format.</td></tr>
+        <tr><td><code class="status-err">422</code></td><td>Validation Error</td><td>JSON fields with wrong type or missing.</td></tr>
+        <tr><td><code class="status-err">500</code></td><td>Internal Error</td><td>Synthesis error.</td></tr>
       </table>
 <pre><code>{
-  <span class="key">"detail"</span>: <span class="string">"Voz 'voz_inexistente' não disponível. Use GET /voices."</span>
+  <span class="key">"detail"</span>: <span class="string">"Voice 'unknown_voice' not available. Use GET /voices."</span>
 }</code></pre>
     </section>
 
     <section id="limits">
-      <h2>Limites e Restrições</h2>
+      <h2>Limits and Restrictions</h2>
       <table>
-        <tr><th>Parâmetro</th><th>Limite</th></tr>
-        <tr><td>Tamanho do texto</td><td>1 a 10.000 caracteres</td></tr>
-        <tr><td>Velocidade (speed)</td><td>0.5 a 2.0</td></tr>
-        <tr><td>Pitch</td><td>-80 a 80</td></tr>
-        <tr><td>Formatos de saída</td><td><code>mp3</code>, <code>wav</code> (apenas /tts)</td></tr>
-        <tr><td>Formato streaming</td><td><code>mp3</code> apenas (256 kbps)</td></tr>
-        <tr><td>Idiomas</td><td>pt-BR, en-US, es-ES, fr-FR, ja-JP e de-DE</td></tr>
+        <tr><th>Parameter</th><th>Limit</th></tr>
+        <tr><td>Text size</td><td>1 to 10,000 characters</td></tr>
+        <tr><td>Speed</td><td>0.5 to 2.0</td></tr>
+        <tr><td>Pitch</td><td>-80 to 80</td></tr>
+        <tr><td>Output formats</td><td><code>mp3</code>, <code>wav</code> (/tts only)</td></tr>
+        <tr><td>Streaming format</td><td><code>mp3</code> only (256 kbps)</td></tr>
+        <tr><td>Languages</td><td>pt-BR, en-US, es-ES, fr-FR, ja-JP and de-DE</td></tr>
       </table>
     </section>
 
     <section id="deploy">
-      <h2>Deploy e Configuração</h2>
-<pre><code><span class="comment"># Instalar dependências</span>
+      <h2>Deployment and Configuration</h2>
+<pre><code><span class="comment"># Install dependencies</span>
 pip install -r requirements.txt
 
-<span class="comment"># Iniciar a API</span>
+<span class="comment"># Start the API</span>
 python start.py
 
-<span class="comment"># Ou via Windows</span>
-run-kokoro.bat</code></pre>
+<span class="comment"># Or via Windows</span>
+start.bat</code></pre>
       <div class="info-box tip">
         <span class="icon">&#10003;</span>
-        <div><strong>Dica:</strong> O modelo é carregado no startup da API. Use <code>GET /health</code> para verificar quando o serviço estiver pronto.</div>
+        <div><strong>Tip:</strong> The model is loaded at API startup. Use <code>GET /health</code> to check when the service is ready.</div>
       </div>
     </section>
   </div>
