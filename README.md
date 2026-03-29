@@ -72,8 +72,8 @@ Recommended easiest launcher for non-technical users:
 The installer already handles:
 
 - Python setup or reuse of an existing Python installation
-- automatic local `espeak-ng` portable download when needed
-- `ffmpeg`
+- **espeak-ng**: bundled MSI installer opens interactively (just click "Next")
+- **ffmpeg**: uses pre-bundled copy from `ffmpeg_bundled/` if present, or downloads automatically
 - PyTorch CPU or CUDA build
 - Python dependencies from `requirements.txt`
 
@@ -83,6 +83,7 @@ Supported `espeak-ng` setups:
 - portable copy in `.\espeak-ng\`
 - portable copy in `.\espeak-ng\command_line\`
 - auto-extracted portable copy in `.\espeak-ng\eSpeak NG\`
+- bundled MSI installer `espeak-ng-installer.msi` (included in the repo)
 
 ### Quick Start
 
@@ -98,8 +99,16 @@ For non-technical Windows users:
 1. Download the project as ZIP from GitHub and extract it.
 2. Open the extracted folder.
 3. Run `Instalar e Abrir Evo KokoroTTS.bat`.
-4. If `espeak-ng` is missing, the installer will download and extract a portable local copy automatically.
+4. If `espeak-ng` is missing, the bundled installer will open — just click "Next" to install.
 5. After the first setup, you can use only `run-kokoro.bat`.
+
+### Offline / VM Installation
+
+For environments with slow or no internet (virtual machines, air-gapped systems):
+
+1. On a machine with internet, download ffmpeg from [BtbN Builds](https://github.com/BtbN/FFmpeg-Builds/releases) and extract `ffmpeg.exe` + `ffprobe.exe` into a `ffmpeg_bundled/` folder inside the project.
+2. The `espeak-ng-installer.msi` is already included in the repo.
+3. Copy the entire project folder to the target machine and run the installer normally.
 
 If someone starts `run-kokoro.bat` before the installation is complete, the launcher now tries to repair the environment automatically by calling `install.bat`.
 
@@ -309,6 +318,8 @@ EvoKokoroTTS/
 |-- requirements.txt
 |-- doc.html
 |-- README.md
+|-- espeak-ng-installer.msi
+|-- ffmpeg_bundled/          (optional, for offline installs)
 |-- models/
 |   `-- kokoro_voices/
 |       `-- voices/
