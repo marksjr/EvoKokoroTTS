@@ -91,7 +91,7 @@ Supported `espeak-ng` setups:
 git clone https://github.com/marksjr/EvoKokoroTTS.git
 cd EvoKokoroTTS
 install.bat
-run-kokoro.bat
+start.bat
 ```
 
 For non-technical Windows users:
@@ -100,7 +100,7 @@ For non-technical Windows users:
 2. Open the extracted folder.
 3. Run `Instalar e Abrir Evo KokoroTTS.bat`.
 4. If `espeak-ng` is missing, the bundled installer will open — just click "Next" to install.
-5. After the first setup, you can use only `run-kokoro.bat`.
+5. After the first setup, you can use only `start.bat`.
 
 ### Offline / VM Installation
 
@@ -126,7 +126,7 @@ Steps:
 2. Copy the entire project folder to the target machine and run the installer.
 3. Internet is still needed for PyTorch and Python packages (~200 MB on first install).
 
-If someone starts `run-kokoro.bat` before the installation is complete, the launcher now tries to repair the environment automatically by calling `install.bat`.
+If someone starts `start.bat` before the installation is complete, the launcher now tries to repair the environment automatically by calling `install.bat`.
 
 If a system Python is installed but incompatible, the installer now ignores it and switches to the bundled Python 3.11 runtime automatically.
 
@@ -329,7 +329,7 @@ Current Python dependencies include:
 ```text
 EvoKokoroTTS/
 |-- install.bat
-|-- run-kokoro.bat
+|-- start.bat
 |-- start.py
 |-- requirements.txt
 |-- doc.html

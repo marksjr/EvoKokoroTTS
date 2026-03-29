@@ -1,15 +1,13 @@
 @echo off
 chcp 65001 >nul 2>&1
-title Evo KokoroTTS - Servidor
+title Evo KokoroTTS - Server
 cd /d "%~dp0"
 
 echo.
-echo  ====================================================
-echo        Evo KokoroTTS - Iniciando...
-echo  ====================================================
+echo  Evo KokoroTTS - Starting...
 echo.
 
-:: Adicionar ferramentas locais ao PATH se existirem
+:: Add local tools to PATH if they exist
 if exist "%~dp0ffmpeg\ffmpeg.exe" set "PATH=%~dp0ffmpeg;%PATH%"
 if exist "%~dp0ffmpeg\bin\ffmpeg.exe" set "PATH=%~dp0ffmpeg\bin;%PATH%"
 if exist "%~dp0ffmpeg_bundled\ffmpeg.exe" set "PATH=%~dp0ffmpeg_bundled;%PATH%"
@@ -20,12 +18,12 @@ if exist "C:\Program Files\eSpeak NG\espeak-ng.exe" set "PATH=C:\Program Files\e
 
 set "PYTHON_CMD="
 
-:: Detectar qual Python usar
+:: Detect which Python to use
 call :resolve_python
 if not defined PYTHON_CMD (
     where python >nul 2>&1
     if errorlevel 1 (
-        echo  Primeira execucao detectada. Iniciando instalacao...
+        echo  First run detected. Starting installation...
         echo.
         set "EVO_SKIP_PAUSE=1"
         call "%~dp0install.bat"
@@ -38,10 +36,8 @@ if not defined PYTHON_CMD (
 
 if not defined PYTHON_CMD (
     echo.
-    echo  ====================================================
-    echo   Python nao foi encontrado.
-    echo   Execute o instalador: install.bat
-    echo  ====================================================
+    echo  Python was not found.
+    echo  Run the installer: install.bat
     echo.
     pause
     exit /b 1
@@ -49,7 +45,7 @@ if not defined PYTHON_CMD (
 
 "%PYTHON_CMD%" -c "import uvicorn, fastapi, torch, kokoro" >nul 2>&1
 if errorlevel 1 (
-    echo  Componentes ausentes. Reparando automaticamente...
+    echo  Missing components. Repairing automatically...
     echo.
     set "EVO_SKIP_PAUSE=1"
     call "%~dp0install.bat"
@@ -60,26 +56,23 @@ if errorlevel 1 (
 "%PYTHON_CMD%" -c "import uvicorn, fastapi, torch, kokoro" >nul 2>&1
 if errorlevel 1 (
     echo.
-    echo  ====================================================
-    echo   A instalacao nao esta completa.
-    echo   Execute o instalador: install.bat
-    echo  ====================================================
+    echo  Installation is not complete.
+    echo  Run the installer: install.bat
     echo.
     pause
     exit /b 1
 )
 
-echo  Servidor iniciando...
-echo  O navegador vai abrir automaticamente.
+echo  Server starting...
+echo  The browser will open automatically.
 echo.
-echo  Para encerrar, feche esta janela ou pressione Ctrl+C.
+echo  To stop, close this window or press Ctrl+C.
 echo.
-echo  ----------------------------------------------------
 
 start "" powershell -WindowStyle Hidden -Command "Start-Sleep 4; Start-Process 'http://localhost:8880'"
 "%PYTHON_CMD%" start.py
 echo.
-echo  Servidor encerrado.
+echo  Server stopped.
 pause
 goto :eof
 
