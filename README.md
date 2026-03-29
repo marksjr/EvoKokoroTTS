@@ -103,9 +103,9 @@ The following components are already included in the repo and do **not** require
 
 | Component | Status |
 |-----------|--------|
-| **Python 3.11 Embedded** | Included (`python.zip`, 11 MB) |
-| **espeak-ng** | Included (`espeak-ng-installer.msi`, 13 MB) |
-| **Visual C++ Redistributable** | Included (`vc_redist.x64.exe`, 25 MB) |
+| **Python 3.11 Embedded** | Included (`installers/python.zip`, 11 MB) |
+| **espeak-ng** | Included (`installers/espeak-ng-installer.msi`, 13 MB) |
+| **Visual C++ Redistributable** | Included (`installers/vc_redist.x64.exe`, 25 MB) |
 | **ffmpeg** | **Must be added manually** (too large for GitHub) |
 
 For ffmpeg, download in advance on a machine with internet:
@@ -330,8 +330,10 @@ EvoKokoroTTS/
 |-- requirements.txt
 |-- doc.html
 |-- README.md
-|-- python.zip       (bundled Python 3.11)
-|-- espeak-ng-installer.msi  (bundled espeak-ng)
+|-- installers/
+|   |-- python.zip              (bundled Python 3.11)
+|   |-- espeak-ng-installer.msi (bundled espeak-ng)
+|   `-- vc_redist.x64.exe       (bundled Visual C++)
 |-- ffmpeg/                  (add ffmpeg.exe here for offline installs)
 |-- models/
 |   `-- kokoro_voices/

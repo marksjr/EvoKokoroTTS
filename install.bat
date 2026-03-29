@@ -41,10 +41,10 @@ if %errorlevel% equ 0 (
 )
 
 :: Extract bundled zip if available
-if exist "%~dp0python.zip" (
+if exist "%~dp0installers\python.zip" (
     echo         Extracting bundled Python...
     mkdir python 2>nul
-    powershell -Command "Expand-Archive -Path 'python.zip' -DestinationPath 'python' -Force"
+    powershell -Command "Expand-Archive -Path 'installers\python.zip' -DestinationPath 'python' -Force"
     if errorlevel 1 goto :fail_python_extract
     powershell -Command "(Get-Content 'python\python311._pth') -replace '#import site','import site' | Set-Content 'python\python311._pth'"
     echo         Setting up package manager...
@@ -98,14 +98,14 @@ if exist "%ESPEAK_PORTABLE_DIR%\espeak-ng.exe" (
     goto :check_ffmpeg
 )
 
-if not exist "%~dp0espeak-ng-installer.msi" goto :espeak_download
+if not exist "%~dp0installers\espeak-ng-installer.msi" goto :espeak_download
 
 echo.
 echo  espeak-ng needs to be installed.
 echo  An installer window will open now.
 echo  Just click "Next" until it finishes.
 echo.
-msiexec /i "%~dp0espeak-ng-installer.msi"
+msiexec /i "%~dp0installers\espeak-ng-installer.msi"
 echo.
 
 if exist "C:\Program Files\eSpeak NG\espeak-ng.exe" (
@@ -117,7 +117,7 @@ if exist "C:\Program Files\eSpeak NG\espeak-ng.exe" (
 echo         Trying automatic install...
 mkdir "%ESPEAK_PORTABLE_ROOT%" 2>nul
 if exist "%ESPEAK_PORTABLE_DIR%" rd /s /q "%ESPEAK_PORTABLE_DIR%" 2>nul
-msiexec /a "%~dp0espeak-ng-installer.msi" /qn TARGETDIR="%ESPEAK_PORTABLE_ROOT%"
+msiexec /a "%~dp0installers\espeak-ng-installer.msi" /qn TARGETDIR="%ESPEAK_PORTABLE_ROOT%"
 if exist "%ESPEAK_PORTABLE_DIR%\espeak-ng.exe" (
     echo         OK - espeak-ng configured.
     set "PATH=%ESPEAK_PORTABLE_DIR%;%PATH%"
@@ -128,7 +128,7 @@ echo.
 echo  COULD NOT INSTALL ESPEAK-NG
 echo.
 echo  Try installing manually:
-echo  1. Open the file espeak-ng-installer.msi
+echo  1. Open the file installers\espeak-ng-installer.msi
 echo  2. Click Next until it finishes
 echo  3. Run this installer again
 echo.
@@ -213,7 +213,7 @@ echo.
 set "VCREDIST_EXE="
 
 :: Use bundled installer if available
-if exist "%~dp0vc_redist.x64.exe" (
+if exist "%~dp0installers\vc_redist.x64.exe" (
     set "VCREDIST_EXE=%~dp0vc_redist.x64.exe"
     goto :vcredist_install
 )
@@ -370,7 +370,7 @@ exit /b 1
 :fail_python_extract
 echo.
 echo  ERROR: Could not extract Python.
-echo  The python.zip file may be corrupted.
+echo  The installers\python.zip file may be corrupted.
 echo  Try downloading the project again from GitHub.
 echo.
 pause

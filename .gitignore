@@ -1,7 +1,6 @@
 # Python
 venv/
 python/
-!python.zip
 __pycache__/
 *.pyc
 *.pyo
