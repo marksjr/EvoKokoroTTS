@@ -235,56 +235,37 @@ echo [5/6] Detectando hardware e instalando dependencias...
 
 echo   Atualizando pip...
 "%PYTHON%" -m pip install --upgrade pip setuptools wheel
-if errorlevel 1 (
-    echo.
-    echo  ERRO: Falha ao atualizar pip/setuptools/wheel.
-    echo.
-    pause
-    exit /b 1
-)
+if errorlevel 1 goto :fail_pip_upgrade
 
 :: Verificar se NVIDIA GPU esta presente
 set "HAS_GPU=0"
 nvidia-smi >nul 2>&1
-if %errorlevel% equ 0 (
-    set "HAS_GPU=1"
-    echo.
-    echo   *** GPU NVIDIA detectada! ***
-    echo   Instalando PyTorch com suporte CUDA...
-    echo.
-    "%PYTHON%" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
-    if errorlevel 1 (
-        echo.
-        echo  ERRO: Falha ao instalar PyTorch com CUDA.
-        echo.
-        pause
-        exit /b 1
-    )
-) else (
-    echo.
-    echo   Nenhuma GPU NVIDIA detectada. Usando CPU.
-    echo   Instalando PyTorch versao CPU (mais leve)...
-    echo.
-    "%PYTHON%" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-    if errorlevel 1 (
-        echo.
-        echo  ERRO: Falha ao instalar PyTorch para CPU.
-        echo.
-        pause
-        exit /b 1
-    )
-)
+if %errorlevel% equ 0 goto :install_torch_gpu
+goto :install_torch_cpu
 
+:install_torch_gpu
+set "HAS_GPU=1"
+echo.
+echo   *** GPU NVIDIA detectada! ***
+echo   Instalando PyTorch com suporte CUDA...
+echo.
+"%PYTHON%" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+if errorlevel 1 goto :fail_torch
+goto :install_requirements
+
+:install_torch_cpu
+echo.
+echo   Nenhuma GPU NVIDIA detectada. Usando CPU.
+echo   Instalando PyTorch versao CPU (mais leve)...
+echo.
+"%PYTHON%" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+if errorlevel 1 goto :fail_torch
+
+:install_requirements
 echo.
 echo   Instalando dependencias do projeto...
 "%PYTHON%" -m pip install -r requirements.txt
-if errorlevel 1 (
-    echo.
-    echo  ERRO: Falha ao instalar as dependencias do projeto.
-    echo.
-    pause
-    exit /b 1
-)
+if errorlevel 1 goto :fail_requirements
 
 :: ============================================================
 :: 6. Verificar instalacao
@@ -292,7 +273,7 @@ if errorlevel 1 (
 echo.
 echo [6/6] Verificando instalacao...
 
-"%PYTHON%" -c "import torch; cuda='SIM - GPU sera usada!' if torch.cuda.is_available() else 'NAO - usando CPU'; print(f'  PyTorch: {torch.__version__}'); print(f'  CUDA: {cuda}')"
+"%PYTHON%" -c "import torch; cuda='SIM - GPU sera usada' if torch.cuda.is_available() else 'NAO - usando CPU'; print('  PyTorch: ' + torch.__version__); print('  CUDA: ' + cuda)"
 "%PYTHON%" -c "import kokoro; print('  Kokoro: OK')" 2>nul || echo   Kokoro: sera baixado no primeiro uso
 "%PYTHON%" -c "import fastapi; print('  FastAPI: OK')"
 "%PYTHON%" -c "import edge_tts; print('  Edge TTS: OK')"
@@ -310,6 +291,27 @@ echo  ====================================================
 echo.
 pause
 exit /b 0
+
+:fail_pip_upgrade
+echo.
+echo  ERRO: Falha ao atualizar pip/setuptools/wheel.
+echo.
+pause
+exit /b 1
+
+:fail_torch
+echo.
+echo  ERRO: Falha ao instalar PyTorch.
+echo.
+pause
+exit /b 1
+
+:fail_requirements
+echo.
+echo  ERRO: Falha ao instalar as dependencias do projeto.
+echo.
+pause
+exit /b 1
 
 :fail_python_extract
 echo.
