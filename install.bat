@@ -20,12 +20,27 @@ set "ESPEAK_PORTABLE_DIR=%~dp0espeak-ng\eSpeak NG"
 :: 1. Python
 echo  [1/6] Setting up Python...
 
+:: Check embedded Python already extracted
 if exist "python_embedded\python.exe" (
     echo         OK - Python is ready.
     set "PYTHON=%~dp0python_embedded\python.exe"
     goto :check_espeak
 )
 
+:: Check system Python
+where python >nul 2>&1
+if %errorlevel% equ 0 (
+    for /f "tokens=*" %%i in ('python --version 2^>^&1') do set pyver=%%i
+    python -c "import sys; raise SystemExit(0 if sys.version_info[:2] >= (3, 11) and sys.version_info[:2] < (3, 13) else 1)" >nul 2>&1
+    if !errorlevel! equ 0 (
+        set "PYTHON=python"
+        set "USE_SYSTEM_PYTHON=1"
+        echo         OK - Using system Python.
+        goto :check_espeak
+    )
+)
+
+:: Extract bundled zip if available
 if exist "%~dp0python_embedded.zip" (
     echo         Extracting bundled Python...
     mkdir python_embedded 2>nul
@@ -43,24 +58,10 @@ if exist "%~dp0python_embedded.zip" (
     goto :check_espeak
 )
 
-where python >nul 2>&1
-if %errorlevel% equ 0 (
-    for /f "tokens=*" %%i in ('python --version 2^>^&1') do set pyver=%%i
-    python -c "import sys; raise SystemExit(0 if sys.version_info[:2] >= (3, 11) and sys.version_info[:2] < (3, 13) else 1)" >nul 2>&1
-    if !errorlevel! equ 0 (
-        set "PYTHON=python"
-        set "USE_SYSTEM_PYTHON=1"
-        echo         OK - Using system Python.
-    ) else (
-        echo         Incompatible version. Downloading compatible Python...
-        call :download_python
-        if errorlevel 1 goto :fail_end
-    )
-) else (
-    echo         Downloading Python (about 11 MB)...
-    call :download_python
-    if errorlevel 1 goto :fail_end
-)
+:: Download as last resort
+echo         Downloading Python (about 11 MB)...
+call :download_python
+if errorlevel 1 goto :fail_end
 
 :: 2. espeak-ng
 :check_espeak
