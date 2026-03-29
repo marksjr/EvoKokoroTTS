@@ -1,4 +1,8 @@
 """Evo KokoroTTS - Sintese de Voz pt-BR com IA."""
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import uvicorn
 from app.core.config import HOST, PORT
 
