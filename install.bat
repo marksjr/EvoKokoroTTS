@@ -210,6 +210,15 @@ echo         Visual C++ Redistributable not found.
 echo         This is required by PyTorch. Installing now...
 echo.
 
+set "VCREDIST_EXE="
+
+:: Use bundled installer if available
+if exist "%~dp0vc_redist.x64.exe" (
+    set "VCREDIST_EXE=%~dp0vc_redist.x64.exe"
+    goto :vcredist_install
+)
+
+:: Download if not bundled
 where curl.exe >nul 2>&1
 if %errorlevel% equ 0 (
     curl.exe -L -o "%TEMP%\vc_redist.x64.exe" "https://aka.ms/vs/17/release/vc_redist.x64.exe"
@@ -225,14 +234,15 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
+set "VCREDIST_EXE=%TEMP%\vc_redist.x64.exe"
 
+:vcredist_install
 echo         Installing Visual C++ Redistributable...
-"%TEMP%\vc_redist.x64.exe" /install /quiet /norestart
+"%VCREDIST_EXE%" /install /quiet /norestart
 if errorlevel 1 (
     echo         Silent install failed. Opening installer...
-    "%TEMP%\vc_redist.x64.exe"
+    "%VCREDIST_EXE%"
 )
-del "%TEMP%\vc_redist.x64.exe" 2>nul
 
 reg query "HKLM\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\X64" /v Major >nul 2>&1
 if %errorlevel% equ 0 (

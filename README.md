@@ -105,6 +105,7 @@ The following components are already included in the repo and do **not** require
 |-----------|--------|
 | **Python 3.11 Embedded** | Included (`python.zip`, 11 MB) |
 | **espeak-ng** | Included (`espeak-ng-installer.msi`, 13 MB) |
+| **Visual C++ Redistributable** | Included (`vc_redist.x64.exe`, 25 MB) |
 | **ffmpeg** | **Must be added manually** (too large for GitHub) |
 
 For ffmpeg, download in advance on a machine with internet:
