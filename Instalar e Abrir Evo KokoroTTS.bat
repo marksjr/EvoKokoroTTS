@@ -4,10 +4,12 @@ title Evo KokoroTTS - Instalar e Abrir
 cd /d "%~dp0"
 
 echo.
-echo  Evo KokoroTTS - Instalar e Abrir
+echo  ====================================================
+echo        Evo KokoroTTS - Instalar e Abrir
 echo.
-echo  1. O instalador vai preparar o ambiente.
-echo  2. Depois o servidor sera iniciado automaticamente.
+echo        Tudo sera preparado automaticamente.
+echo        Aguarde...
+echo  ====================================================
 echo.
 
 set "EVO_SKIP_PAUSE=1"
