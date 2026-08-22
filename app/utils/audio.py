@@ -76,7 +76,7 @@ def crossfade_chunks(chunks: list[np.ndarray], crossfade_samples: int = None) ->
     return result[:pos]
 
 
-def trim_silence(audio: np.ndarray, threshold: float = 0.01, pad_samples: int = 1200) -> np.ndarray:
+def trim_silence(audio: np.ndarray, threshold: float = 0.01, pad_samples: int = 3600) -> np.ndarray:
     """Removes excessive silence from the beginning and end of the audio."""
     mask = np.abs(audio) > threshold
     if not mask.any():
